@@ -51,3 +51,38 @@ Its installation is as follows:
 Jupyter can be run in a docker container or setup natively on a machine.
 Here, we describe the native Jupyter setup.
 
+
+## MITgcm Project Setup
+
+MITgcm is a Earth System Climate Model (ESCM) available from 
+`http://mitgcm.org/`. The documentation can be found at 
+`https://mitgcm.readthedocs.io/en/latest/`.
+
+To setup the model, you have to can get the code with:
+`git clone https://github.com/MITgcm/MITgcm.git` 
+
+Now you can select an example model. We recommend to use a mode from
+the tutorial, e.g.,
+`https://mitgcm.readthedocs.io/en/latest/examples/barotropic_gyre/barotropic_gyre.html`
+
+Therefore, switch to `verification/tutorial_barotropic_gyre/` inside the
+`MITgcm` code base.
+Before continuing with OceanDSL's CP-DSL, you can have a look at the
+setup files in `input` and `code` sub-directories of the example.
+
+For the CP-DSL, you must create a `configuration.oconf` file in the
+examples model directory. Lets assume this should be done in Eclipse.
+
+- Open Eclipse with a clean workspace.
+- Create a new project that should reside in
+  `verification/tutorial_barotropic_gyre/`
+- You can now copy the `barotropic_gyre.oconf` file to the project.
+- Open the file in Eclipse. Eclipse might ask you to add the XText
+  nature, please do so. In case the `barotropic_gyre.oconf` is opened
+  in a plain text editor, choose *Open with ...* to select the right
+  editor.
+- You can no manipulate settings for the example.
+- Save the file. This generates the necessary configuration files.
+- You can now compile the project following the instructions in the
+  tutorial's README file.
+
