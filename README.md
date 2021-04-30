@@ -6,6 +6,11 @@ and a Jupyter kernel. In the following, we describe how to install
 the CP-DSL in Eclipse, Vim, and Juypter. In addition, we provide 
 instructions how to setup an experiment with MITgcm.
 
+## Prerequisites
+
+- Install Java 11 or newer
+- A Python installation
+
 ## Eclipse Setup
 
 The latest Eclipse plugins are hosted at
