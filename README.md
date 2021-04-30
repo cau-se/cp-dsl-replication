@@ -48,6 +48,11 @@ Its installation is as follows:
 
 ## Jupyter Setup
 
+**Prerequisites**
+- Kernel sources `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
+- LSP sources `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl`
+- Docker setup for Jupyter `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
+
 Jupyter can be run in a docker container or setup natively on a machine.
 We use the LSP extension for Jupyter which can also be found here:
 `https://github.com/krassowski/jupyterlab-lsp`
