@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="HOME_LOG" value="/home/jovyan/work/xtext.log"/>
+
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.FileAppender">
+        <file>${HOME_LOG}</file>
+
+        <encoder>
+           <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="FILE-ROLLING"/>
+    </root>
+
+</configuration>
