@@ -49,8 +49,74 @@ Its installation is as follows:
 ## Jupyter Setup
 
 Jupyter can be run in a docker container or setup natively on a machine.
-Here, we describe the native Jupyter setup.
+We use the LSP extension for Jupyter which can also be found here:
+`https://github.com/krassowski/jupyterlab-lsp`
 
+For the Juypter setup we have three prerequisites:
+- The language server for the CP-DSL
+- The language kernel to compile CP-DSL artifacts which sources can be
+  found here `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel.git`
+- JupyterLab
+
+For the general Jupyter setup including LSP support, please follow
+the instructions in the following referenced documentation:
+
+`https://jupyterlab-lsp.readthedocs.io/en/latest/Installation.html`
+
+The installation of a language server is explained here:
+
+`https://jupyterlab-lsp.readthedocs.io/en/latest/Configuring.html#language_servers`
+
+To add a language server, you need to add a block of JSON configuration
+code in `./jupyter_server_config.json`
+
+```
+"oconf": {
+        "version": 2,
+        "argv": ["java", "-cp", "javassist-3.12.1.GA.jar", "-jar", "org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
+        "languages": ["oconf"],
+        "mime_types": ["text/oconf", "text/x-oconf"]
+      }
+```
+
+Please note that Jupyter needs the fully qualified path to the two
+referenced files `javassist-3.12.1.GA.jar` and 
+`org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar`.
+
+The language kernel must be placed in `share/jupyter/kernels` depending
+on your Jupyter installation location. Create a new directory there
+named `oconf` and create `logback.xml` in that place. Our default
+content for the `logback.xml` is:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+   <property value="path/to/log/file.log" name="HOME_LOG"/>
+   <appender name="FILE-ROLLING" class="ch.qos.logback.core.FileAppender">
+      <file>${HOME_LOG}</file>
+      <encoder>
+         <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+      </encoder>
+   </appender>
+   <root level="debug">
+      <appender-ref ref="FILE-ROLLING"/>
+   </root>
+</configuration>
+```
+
+Please change `path/to/log/file` to an appropriate name and location.
+
+Create the `kernel.json` file an fill it with following content:
+```
+{
+   "argv": ["path/to/cp-dsl-jupyter-kernel/bin/cp-dsl-jupyter-kernel", "{connection_file}" ],
+   "display_name": "Configuration and Parametrization",
+   "language": "oconf"
+}
+
+```
+Place the file in your `share/jupyter/kernels/oconf/` directory.
+Please adapt `path/to/` to the location of the jupyter kernel directory.
 
 ## MITgcm Project Setup
 
