@@ -15,6 +15,9 @@ To work with the CP-DSL only one setup is necessary (Eclipse, Vim or Jupyter).
 - A Fortran compiler (gfortran or ifort) and build tools
 - MITgcm source checkout (or a UVic setup)
 
+- Please make sure that the Java version is 11 or newer otherwise the Vim
+  setup may not work.
+
 ## Eclipse Setup
 
 The latest Eclipse plugins are hosted at
@@ -41,7 +44,8 @@ To install the language support
 For the Vim setup, we use its extension mechanism and a special LSP
 plugins (https://github.com/prabirshrestha/vim-lsp).
 Its installation is as follows:
-- Copy `javassist-3.12.1.GA.jar` and 
+- Install vim, e.g., with `sudo apt install vim`
+- Copy `javassist-3.26.0.GA.jar` and 
   `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar` to a tooling
   directory, e.g., `~/bin` in your home directory.
 - Copy the `example.vimrc` to your home folder and rename it to
@@ -51,26 +55,36 @@ Its installation is as follows:
 - Create a directory `~/.vim`
 - Start `vim`
 - Type `:PlugInstall`, this should install all necessary plugin parts.
-- Copy the `filetype.vim` to the `~/.vim` directory. This provides
+- Exit `vim` with ESC :x (depending on the number of open buffers, you might
+  have to do this twice).
+- Merge or copy the `filetype.vim` to the `~/.vim` directory. This provides
   filetype information to ensure the correct LSP is used.
+- Start `vim` again
 - You can check the status that the LS is available with `:LspStatus`.
+  
+  In case the status is offline or exited, some error might have occured.
+  One option is that the wrong java version is used. You can check this on
+  command line with `java -version`.
+
+  In case the status is online, you are ready to go. Context help is available
+  with CTRL-Space, similarily to Eclipse. 
+
+Please note Vim only provides editing capabilites. Compilation must be performed
+by a command-line compiler.
 
 ## Jupyter Setup
 
+The Jupyter setup requires not only
+
 **Prerequisites**
 - Kernel sources `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
-- LSP sources `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl`
-- Docker setup for Jupyter `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
+- Docker setup (optional) for Jupyter `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
+- LSP for Jupyter `https://github.com/krassowski/jupyterlab-lsp`
+- JuypterLab
 
 Jupyter can be run in a docker container or setup natively on a machine.
-We use the LSP extension for Jupyter which can also be found here:
-`https://github.com/krassowski/jupyterlab-lsp`
-
-For the Juypter setup we have three prerequisites:
-- The language server for the CP-DSL
-- The language kernel to compile CP-DSL artifacts which sources can be
-  found here `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel.git`
-- JupyterLab
+For this use the docker setup. However, to run the system in your own
+Jupyter installation, you can follow the steps below.
 
 For the general Jupyter setup including LSP support, please follow
 the instructions in the following referenced documentation:
@@ -87,14 +101,14 @@ code in `./jupyter_server_config.json`
 ```
 "oconf": {
         "version": 2,
-        "argv": ["java", "-cp", "javassist-3.12.1.GA.jar", "-jar", "org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
+        "argv": ["java", "-cp", "javassist-3.26.0-GA.jar", "-jar", "org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
         "languages": ["oconf"],
         "mime_types": ["text/oconf", "text/x-oconf"]
       }
 ```
 
 Please note that Jupyter needs the fully qualified path to the two
-referenced files `javassist-3.12.1.GA.jar` and 
+referenced files `javassist-3.26.0.GA.jar` and 
 `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar`.
 
 The language kernel must be placed in `share/jupyter/kernels` depending

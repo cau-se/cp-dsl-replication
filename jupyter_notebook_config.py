@@ -45,8 +45,9 @@ if 'GEN_CERT' in os.environ:
 c.LanguageServerManager.language_servers = {
     "a-language-server-implementation": {
         # if installed as a binary
-	"version": 1,
-        "argv": ["java","-jar", "/etc/org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
-        "languages": ["oconf"]
-	   }
+	"version": 2,
+        "argv": ["java","-cp", "/home/reiner/bin/javassist-3.26.0-GA.jar", "-jar", "/home/reiner/bin/org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
+        "languages": ["oconf"],
+        "mime_types": ["text/oconf", "text/x-oconf"]
+    }
 }
