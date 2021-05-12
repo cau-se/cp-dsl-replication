@@ -8,6 +8,13 @@ instructions how to setup an experiment with MITgcm.
 
 To work with the CP-DSL only one setup is necessary (Eclipse, Vim or Jupyter).
 
+## Sources
+
+- CP-DSL  `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl`
+- Replication package `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-replication`
+- Jupyter Kernel `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
+- Jupyter LSP `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
+
 ## Prerequisites
 
 - Install Java 11 or newer
@@ -179,4 +186,3 @@ examples model directory. Lets assume this should be done in Eclipse.
 - Save the file. This generates the necessary configuration files.
 - You can now compile the project following the instructions in the
   tutorial's README file.
-
