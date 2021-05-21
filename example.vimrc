@@ -13,7 +13,9 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 
-" pip install python-language-server
+" install language-server
+" Please make sure that the 2 jar files are found by using absolute paths, e.g.,
+" /home/trillian/bin/javassist-3.12.1.GA.jar
 au User lsp_setup call lsp#register_server({
         \ 'name': 'oconf',
         \ 'cmd': ['java',

@@ -66,7 +66,8 @@ Its installation is as follows:
   have to do this twice).
 - Merge or copy the `filetype.vim` to the `~/.vim` directory. This provides
   filetype information to ensure the correct LSP is used.
-- Start `vim` again
+- Start `vim` again with a file name ending with `.oconf`, e.g., `example.oconf`
+  This will start the LSP. Otherwise the LSP stays inactive.
 - You can check the status that the LS is available with `:LspStatus`.
   
   In case the status is offline or exited, some error might have occured.
@@ -76,8 +77,9 @@ Its installation is as follows:
   In case the status is online, you are ready to go. Context help is available
   with CTRL-Space, similarily to Eclipse. 
 
-Please note Vim only provides editing capabilites. Compilation must be performed
-by a command-line compiler.
+**Notes:**
+- Vim only provides editing capabilites. Compilation must be performed
+  by a command-line compiler.
 
 ## Jupyter Setup
 
