@@ -1,0 +1,143 @@
+model mitgcm
+
+group PARM01 {
+	def viscAh float : "" = 4.0E2
+	def viscAr float : ""
+	def no_slip_sides boolean : ""
+ 	def no_slip_bottom boolean : ""
+ 	def diffKhT float : ""
+ 	def diffKrT float : ""
+ 	def ivdc_kappa float : ""
+ 	def implicitDiffusion boolean : ""
+ 	def implicitViscosity boolean : ""
+ 	def eosType string : ""
+ 	def tRef float[] : ""
+ 	def tAlpha float : ""
+ 	def sBeta float : ""
+ 	def rhoNil float : ""
+ 	def gravity float : ""
+ 	def f0 float : "" = 1.0E-4
+	def beta float : "" = 1.0E-11
+	def selectCoriScheme int : ""
+	def rhoConst float : "" = 1000.0
+	def gBaro float : "" = 9.81
+	def rigidLid boolean : "" = false
+	def implicitFreeSurface boolean : "" = true
+	def startTime int : ""
+	def momAdvection boolean : "" = false
+	def tempStepping boolean : "" = false
+	def exactConserv boolean : ""
+	def saltStepping boolean : "" = false
+	def hFacMinDr float : ""
+ 	def hFacMin float : ""
+ 	def tempAdvScheme int : ""
+ 	def	staggerTimeStep boolean : ""
+}
+
+group PARM02 {
+	def cg2dTargetResidual float : ""
+ 	def cg2dMaxIters int : ""
+}
+
+group PARM03 {
+	def startTime float : ""
+	def endTime float : ""
+	def nIter0 int : ""
+ 	def nTimeSteps int : ""
+ 	def deltaT float : ""
+ 	def pChkptFreq float : ""
+ 	def chkptFreq float : ""
+ 	def dumpFreq float : ""
+ 	def monitorFreq float : ""
+ 	def monitorSelect int : ""
+ 	def tauThetaClimRelax float : ""
+ 	def momDissip_In_AB boolean : ""
+}
+
+group PARM04 {
+	def usingSphericalPolarGrid boolean : ""
+	def usingCartesianGrid boolean : ""
+ 	def delX float : ""
+ 	def delY float : ""
+ 	def xgOrigin float : ""
+ 	def ygOrigin float : ""
+ 	def delR float : ""
+}
+
+group PARM05 {
+	def bathyFile file : ""
+ 	def zonalWindFile file : ""
+ 	def meridWindFile file : ""
+ 	def thetaClimFile file : ""
+ 	def hydrogThetaFile file : ""
+}
+
+group EEPARMS {
+	def nTx int : ""
+ 	def nTy int : ""
+}
+
+group size {
+	def sNx int : "" = 1
+    def sNy int : "" = 1
+    def OLx int : ""
+    def OLy int : ""
+    def nSx int : "" = 1
+    def nSy int : "" = 1
+    def nPx int : "" = 1
+    def nPy int : "" = 1
+    def Nx int : "" = sNx*nSx*nPx
+    def Ny int : "" = sNy*nSy*nPy
+    def Nr int : ""
+}
+
+group layers_size {
+	def Nlayers int : ""
+	def FineGridFact int : ""
+	def FineGridMax int : ""
+	def layers_maxNum int : ""
+}
+
+diagnostics {
+		
+}
+
+module MNC {
+	group MNC_01 {
+ 		def monitor_mnc boolean : ""
+ 		def mnc_use_outdir boolean : ""
+ 		def mnc_outdir_str string : ""
+	}
+}
+
+// gfd is a meta package in mitgcm
+module GFD {
+	
+}
+
+module GMRedi {
+	group GM_PARM01 {
+  		def GM_background_K float : ""
+  		def GM_taper_scheme string : ""
+  		def GM_AdvForm boolean : ""
+  	}
+}
+
+module RBCS {
+	group RBCS_PARM01 {
+		def useRBCtemp boolean : ""
+ 		def tauRelaxT float : ""
+ 		def relaxMaskFile file : ""
+ 		def relaxTFile file : ""
+	}
+	group RBCS_PARM02 {
+		
+	}
+}
+
+module Layers {
+	group LAYERS_PARM01 { 
+ 		def layers_name string[] : ""
+ 		def	layers_bounds float[,] : ""
+ 	}
+}

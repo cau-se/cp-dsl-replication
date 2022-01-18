@@ -1,0 +1,19 @@
+for mitgcm
+
+file '''#{name}/data.pkg''' : '''
+# Packages
+ &PACKAGES
+#{for modules join "\n" use packageItem(it)}
+#{if exists(diagnostics) " useDiagnostics=.TRUE.," }
+ &
+'''
+
+template packageItem(Module module) ''' use#{module.name}=.TRUE.,'''
+
+file '''#{name}/packages.conf''' : '''
+#-- list of packages (or group of packages) to compile for this experiment:
+#{for modules join "\n" use modulePackageTemplate(it)}
+#{if exists(diagnostics) "diagnostics" }
+'''
+
+template modulePackageTemplate(Module module) '''#{lowerCase(module.name)}'''

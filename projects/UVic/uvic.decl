@@ -1,0 +1,488 @@
+model uvic
+
+types
+	enum FileType { f90, f }
+	enum SurplusCinFood { egest, respire }
+
+features
+	even_fluxes : "Atmosphere ocean coupling. Every other flux used for conservative coupling.  See embm/embm.F and mom/mom.F."
+	read_my_kmt : "Read kmt (from a map file). This is the default behavior. Option does no longer exist in 2.9."
+	read_my_grid : "Read grid from a map file. This is the default behavior. Option does no longer exist in 2.9."
+	cyclic : "Seems to control the mom behaviour at the boundary i=1, i=100. The 'opposite' option is solid_walls. O_cyclic is essentially ON in the Kiel version."
+	time_averages : "Accumulate or \"average and write\" time mean data (ta_) on the \"averaging\" grid. Prepares the output to tavg. Essentially ON. Related namelist vars: /diagn/ timavgint, timavgper.  See common/switch.F, etc."
+	time_step_monitor : "Accumulate or \"average and write\" time mean integrated data. Prepares the output for tsi files. Essentially ON.  Related namelist vars: /diagn/ tsiint, tsiper.  See common/switch.F"
+	sbc_in_memory : "Atmospheric boundary conditions (windspeed, windstress, etc.) are kept in memory if ON. Note that this is coded only for monthly 'forcing' data! This affects also the options O_read_my_stf, O_replacst, O_restorst.  See common/setdata.F."
+	fourfil : "Apply a Fourier filter at high latitudes to maintain numerical stability with converging meridians."
+	constant_flux_reference : "If OFF, new global average sea surface flux reference (gaost) is calculated in common/gasbc.F.  if ON, gaost values are computed only once in mom/setmom.F.  See common/gasbc.F."
+	global_sums : "Calculate global sums of heat and fresh water, carbon and write to tsi (and to logfile).  See common/global_sums.F"
+	idealized_ic : "This option affects the initialization of tracer data in mom/setmom.F (subroutine rowi()). If option is ON, the globally defined constant values are NOT superseded by reading in regionally variable data from data files, e.g., data/O_temp.nc, etc.  Note that in our runs initial data are superseded by data read from data/restart.nc, if it exists(!).  See mom/setmom.F: setmom()."
+	replacst : "Read in surface ocean temperature and salinity from external file and replace model sst and sss to let the model calculate the respective fluxes  Input files: O_tempsur.nc, O_salsur.nc  See source/common/data.F and setdata.F  See also remark to option O_sbc_in_memory."
+	restorst : "Read in surface ocean temperature and salinity from external file and set fluxes to restore model sst and sss to these values  Input files O_tempsur.nc, O_salsur.nc  See source/common/data.F, setdata.F and also comment to option O_sbc_in_memory."
+	save_flxadj : "Save surface downward heat and salt flux adjustments to tavg.  Related to O_replacst and O_restorst"
+	read_my_stf : "Read in heat flux and fresh water data  Input files: data/F_heat.nc; F_salt.nc.  See source/common/data.F and setdata.F  See also remark to option O_sbc_in_memory."
+	min_window : "Use minimum memory window, given current computer memory, this should be always OFF"
+	restart_2 : "For backward compatibility with 2.8 restart file convention; in Kiel always OFF"
+	align_coupling_output : "Related to option O_time_step_monitor and O_time_averages.  See common/switch.F."
+	time_averages_monthly_continuous : "Related to option O_time_averages."
+	shortwave : "Read in penetrating shortwave radiation.  Input file O_penswr.nc"
+	neptune : "The option neptune provides a subgrid-scale parameterization for the interaction of eddies and topography.   See mom/neptune.F"
+	solid_walls : "Either O_cyclic or O_solid_walls has to be enabled. O_solid_walls seems to control the mom behaviour at the boundary i=1, i=100. In the Kiel version, the O_cyclic ON is the default."
+	firfil : "Alternative option to O_fourfil related to the polar filtering."
+
+group general {
+	def version_directory file : ""  // should be - not _
+	def executable_file file : "" = "UVic_ESCM"
+	def output_file file : "" = "pr"
+	def code_directory file : "" = "code"
+	def data_directory file : "" = "data"
+	def updates_level string : "" = "latest"
+	def no_warnings boolean : "" = true
+	def preprocessor string : "" = "fpp"
+	def libraries string[] : ""
+	def library_paths file[] : ""
+	def compiler_f string : "" = "ifort -r8 -O3 -warn nouncalled -c"
+	def compiler_f90 string : "" = "ifort -r8 -O3 -warn nouncalled -c"
+	def linker string : "" = "ifort -r8 -O3 -warn nouncalled -o"
+}
+
+group source {
+    def code_extensions FileType[] : "" // should be - not _
+    def directories file[] : ""
+}
+
+group data {
+	def directories file[] : ""
+}
+
+// Note this is a temporary measure, better assign groups to individual modules below
+// if applicable.
+module generic {
+	group contrl {
+		def init boolean : "" = false // initialize all tracers? otherwise read from data/restart.nc
+	 	def runlen float : "" = 365.0e5
+	 	def rununits string : "" = "days" // target-length of chain of simulations
+	    def restrt boolean : "" = true // write data/restart.nc at end of simulation?
+		def runstep int : "" = 73000 // actual length of simulation
+	}
+	
+	group tsteps {
+		def dtts float : "" = 108000.0 // time step (s) for density and tracers
+	 	def dtuv float : "" = 1125.0
+	 	def dtsf float : "" = 1125.0 // time steps (s) for baroclinic, barotropic velocities
+	    def dtatm float : "" = 54000.0  //  atmosphere time step (s)
+		def namix int : "" = 10 // No. of time steps between mixing
+		def segtim float : "" = 5.0 // 1/(coupling frequency) (d)
+	}
+	
+	group riglid {
+		def mxscan int : "" = 200 // max number of allowable scans for Poisson solvers
+	 	def sor float : "" = 1.60 // successive over-relaxation constant
+		def tolrsf float : "" = 5.0e8
+		def tolrsp float : "" = 1.0e-4 // tolerances for stream function, surface pressure,
+		def tolrfs float : "" = 1.0e-4 // implicit free surface
+	}
+	
+	group mixing {
+		def am float : "" = 1.5e9
+		def ah float : "" = 8.0e6 // ateral viscosity coeff for momentum, diffusion coeff for tracers
+	 	def ahbkg float : "" = 0.0 // background ah
+		def ambi float : "" = 1.0e23
+		def ahbi float : "" = 5.0e22 // biharmonic am, ah
+	    def kappa_m float : "" = 10.0
+	    def kappa_h float : "" = 0.15               // vertical viscosity, diffusion coefficient (cm**2/sec)
+		def aidif float : "" = 0.5                  // implicitness of vertical diffusion
+		def nmix int : "" = 16                      // number of time steps between mixing timesteps
+	    def eb boolean : "" = false                 // mixing timestep (.true., .false.: Euler backward, forward)
+		def ncon int : "" = 1                       // number of passes through convective code in tracer.F
+		def cdbot float : "" = 1.3e-3               // bottom drag coefficient
+		def acor float : "" = 0.0                   // (>0, 0) = (implicit, explicit) treatment of Coriolis terms
+	    def dampts float[2] : "" = [ 30.0, 60.0 ]   // time scales for damping surface tracers (days) to data
+	    def dampdz float[2] : "" = [ 50.0e2,50.0e2 ]// ocean level thickness for converting Newtonian damping to a surface flux
+	}
+	
+	group diagn {
+		def tsiint float : "" = 365.0
+		def tsiper float : "" = 365.0       // interval, averaging period (d) for time-step integrals
+	    def timavgint float : "" = 36500.0
+	    def timavgper float : "" = 365.0    // interval, averaging period (d) for time averages
+	    def restint float : "" = 36500.0    // interval (d) between saving restarts
+	    def tavgint float : "" = -365000.0  // number of days between regional tracer averages
+		def itavg boolean : "" = true       // write regional mask info for the tracer average diagnostic?
+		def tmbint float : "" = -365000.0   // period (days) for averaging tracer equation in depth and longitude
+		def itmb boolean : "" = true        // write "msktmb" for tracer the meridional balance diagnostic?
+	    def trmbint float : "" = -365000.0  // number of days between momentum and tracer term balances
+		def itrmb boolean : "" = true       // write regional mask info for the term balance diagnostic?
+		def tbtint float : "" = -365000.0
+		def tbtper float : "" = -365.0      // averaging interval, period for tracer term balances
+	    def glenint float : "" = -365000.0  // interval (days) between global energetics integrals
+		def vmsfint float : "" = -365000.0  // interval between calculations of vert. and mer. stream functions
+		def stabint float : "" = -365000.0  // interval between sampling for various stability criteria
+	    def zmbcint float : "" = -365000.0  // interval between calculations of zonal mean surface boundary conditions
+		def gyreint float : "" = -365000.0  // number of days between calculations of tracer northward transport
+		def extint float : "" = -365000.0   // number of days between printouts of external mode
+	    def prxzint float : "" = -365000.0  // number of days between printouts of x-z data
+		def dspint float : "" = -365000.0   // interval between surface pressure calculations (O_diagnostic_surf_height only)
+	    def xbtint float : "" = -365000.0   // averaging interval (days) for writing XBT data (O_xbts only)
+	}
+	
+	group io {
+		def iotavg int : "" = 6
+		def iotmb int : "" = 6
+		def iotrmb int : "" = 6
+		def iozmbc int : "" = 6
+		def ioglen int : "" = 6
+		def iovmsf int : "" = 6
+	    def iogyre int : "" = 6
+	    def ioprxz int : "" = 6 
+	    def ioext int : "" = 6 
+	    def iodsp int : "" = 6 
+	    def iotsi int : "" = -1 
+	    def iotraj int : "" = 6
+	    def ioxbt int : "" = 6
+	    def mrot int : "" = 1
+	    def jsot int : "" = 65
+	    def jeot int : "" = 90
+	    def ksot int : "" = 3
+	    def keot int : "" = 17
+	}
+	
+	group ictime {
+		def eqyear boolean : "" = true 
+		def eqmon boolean : "" = false         // do all years, months have equal length?
+	 	def refinit boolean : "" = true 
+	 	def refrun boolean : "" = false        // logical, diagnostic switches based on in. cond. (.true.) or reference time
+	    def init_time_in boolean : "" = true 
+	    def init_time_out boolean : "" = false // set input, output restart to initial time?
+	    def year0 int : "" = 0
+	    def month0 int : "" = 1 
+	    def day0 int : "" = 1 
+	    def hour0 int : "" = 0 
+	    def min0 int : "" = 0 
+	    def sec0 int : "" = 0 // initial time
+	}
+	
+	group blmix {
+		def AHV float : "" = 0.6
+	}
+	
+	group hlmix {
+	}
+	
+	group isopyc {
+		def slmx float : "" = 0.01     // maximum allowable isopycnal slope
+	 	def ahisop float : (centi meter ** 2)/second  = 1.2e7  // isopycnal tracer mixing coefficient (cm2 s-1)
+		def athkdf float : (centi meter ** 2)/second = 8.0e6   // isopycnal thickness diffusivity (cm2 s-1)
+		def del_dm float : "" = 0.4e-02
+		def s_dm float : "" = 0.1e-2 // transition, half width for scaling diffusion coefficient
+	}
+	
+	group ppmix  {} 
+	
+	group smagnl {}
+	
+	group embm {
+		def adiff float : "" = 0.03 // anomolous diffusion factor (°C-1)
+	}
+	
+	group carbon {
+		def co2ccn float : "" = 284.3 // atmospheric CO2 concentration (ppmv)
+	}
+	
+	group paleo {
+		def pyear float : "" = 1850.0 // default paleo calendar year (-/+ = BC/AD)
+	}
+	
+	group ice { }
+	
+	group veg { }
+	
+	group mtlm {
+		def BF float : "" = 0.5 // agriculture land burn fraction
+	}
+	
+	group npzd {
+		def k1n float : mili mole / (meter ** 3) = 0.7      // half-saturation constant for N uptake (mmol m-3)
+	 	def capr float : "" = 0.03    // carbonate to carbon production ratio
+		def abio float : "" = 0.6     // maximum growth rate (d-1)
+		def alpha float : "" = 0.16   // initial slope of P-I curve (1/(W/m2)/day)
+		def nup float : "" = 0.03 
+		def nupt0 float : "" = 0.018  // phytopl. specific temp.-independent, -dependent mortality (d-1)
+		def redctn float : "" = 6.625 
+		def redotn float : "" = 10.0  // Redfield C:N, O:N ratio (mol/mol)
+	 	def geZ float : "" = 0.40     // zoo growth efficiency
+		def gbio float : "" = 0.4     // max. grazing rate at 0°C (d-1)
+		def wd0 float : "" = 16.0     // detritus sinking speed at the surface (m/d)
+		def nuz float : "" = 0.06     // zoo quadratic mortality (m3 mmol-1 d-1)
+		def jdiar float : "" = 0.4    // growth-rate factor for diazotrophs
+		def nud0 float : "" = 0.087   // detritus remineralization rate (d-1)
+		def kfe float : "" = 0.066e-3
+		def kfe_D float : mili mole / (meter ** 3) = 0.132e-3 // Fe half saturation for phyt, diaz (mmol m-3)
+		def zprefP float : "" = 0.25
+		def zprefZ float : "" = 0.25
+		def zprefDet float : "" = 0.25 
+		def zprefD float : "" = 0.25 // zoo food preferences
+	}
+	
+	group cmo {
+		def fF float : "" = 0.0 // N2 fixation ability (0 or 1)
+	 	def A0 float : "" = 229.0 
+	 	def alpha float : "" = 0.4 // nutrient, light affinity (m3 mol-1 d-1, m2 W-1 d-1)
+		def Q0N float : "" = 0.04128
+		def Q0P float : "" = 0.0022 // N, P subsistence quota (mol mol-1)
+	}
+	
+	group cmo {
+		def fF float : "" = 1.0 
+		def A0 float : "" = 172.0 
+		def alpha float : "" = 0.5 
+		def Q0N float : "" = 0.067 
+		def Q0P float : "" = 0.00271
+	 	def ftp string : "" = 'orphy'
+	 	def ftNF string : "" = 'houlton' // temperatur function for growth, N2 fixation
+	}
+	
+	group cfo {
+		def phi float[4] : (meter ** 3)/(mili mole)  = [ 118.0, 232.0, 94.0, 118.0 ] // prey-capture coefficients for phyt, diaz, detr, zoop (m3 mmol-1)
+	 	def Imax float : "" = 1.75 // max. ingestion (d-1)
+	 	// should be a enumeration, but there seem to be internal issues
+		def regex string : "" = "respire" // 'egest' or 'respire' surplus C in food
+	}
+
+}
+
+module Atmosphere {
+    features
+        embm : "main embm option"
+        embm_mgrid : "mgrid atmospheric solver"
+        embm_awind : "wind feedback"
+        embm_adiff : ""
+        embm_vcs : ""
+        save_embm_diff : "write atmospheric diffusion to output files"
+        save_embm_wind : "write wind to output file"
+        embm_slap : "slap atmospheric solver"
+		embm_essl : "essl atmospheric solver"
+		embm_solve2y : "half resolution solver in y (experimental in 2.8, use with caution)"
+		embm_solve2x : "half resolution solver in x (experimental in 2.8, use with caution)"
+		embm_sparskit : ""
+		embm_adi : "adi atmospheric solver (experimental in 2.8, use with caution)"
+		embm_explicit : "explicit atmospheric solver (experimental in 2.8, use with caution)"
+		embm_explicit_q : "explicit solver just for q  (experimental in 2.8, use with caution)"
+		embm_sparskit : "sparsekit atmospheric solver (experimental in 2.8, use with caution)"
+		embm_running_average : ""
+		read_rivers_map : "See embm/rivmodel.F"
+		plume : "See mom/tracer.F, common/gasbc.F, common/gosbc.F.  See also options O_plume_brine and O_convect_brine"
+}
+
+module SeaIce {
+    features
+		ice : "main ice option, turns sea ice model ON"
+		ice_evp : "evp dynamics"
+		ice_fourfil : "filter ice velocities with fourfil"
+		ice_cpts : "main cpts model option"
+		ice_cpts3 : "3 categories"
+		ice_cpts5 : "5 categories"
+		ice_cpts10 : "10 categories"
+		ice_firfil : "filter ice velocities with firfil"
+		ice_cpts_roth_press : "uses roth pressure"
+		ice_cpts_simple_growth : ""
+		correct_ice_to_ocean_stress : "Kiel group bug fix?"
+}
+
+module LandAndVegetation {
+    features
+        mtlm : "Turn on the land and vegetation model. --- WK has used versions where it was turned off."
+        mtlm_segday : ""
+}
+
+module Ocean {
+	features
+		mom : "main mom option, turns on the ocean model"
+		ramdrive : "I did not find this option in the code anymore. Seems to be outdated."
+		stream_function : "Compute and save stream function (xyt) to tavg (psi).  See source/mom/tropic.F, etc."
+		conjugate_gradient : "Related to option stream_function. Either conjugate_gradient, oldrelax, or  hypergrid; must be used with stream_function  See mom/checks.F and mom/tropic.F"
+		oldrelax : "Related to option O_stream_function, see above."
+		hypergrid : "Related to option O_stream_function, see above."
+		sf_5_point : "Related to option O_stream_function. Numerics.  See source/mom/tropic.F."
+		sf_9_point : "Related to option O_stream_function. Numerics. Alternative to option O_sf_5_point.  See source/mom/tropic.F."
+		consthmix : "See mom/hmixc.F"
+		constvmix : "See mom/vmixc.F"
+		fullconvect : "Full convective scheme is enabled, it will ignore \"ncon\" and remove all instability. Alternative (option OFF) is the standard convective scheme which needs to have ncon defined, which is a namelist variable (default value: /mixing/ ncon=1)"
+		save_convection : "Save convection diagnostics to tavg. O_convlev (number of convected levels), O_ventdep (ventelation depth), O_convpe (potential energy lost due to convection)"
+		stability_tests : "Do stability diagnosis. Related namelist var: /diagn/ stabint. Usually implicitly turned off in our code due to negative value of stabint.  See common/switch.F"
+		gyre_components : " Compute gyre components. Related namelist var: /diagn/ gyreint. Usually implicitly turned off in our code due to negative value of gyreint.  See common/switch.F"
+		term_balances : "Compute tracer & momentum term balances Related namelist var: /diagn/ trmbint. Usually implicitly turned off in our code due to negative value of trmbint."
+		energy_analysis : "Compute global energetics. Related namelist var: /diagn/ glenint. Usually implicitly turned off in our code due to negative value of glenint.  See common/switch.F."
+		meridional_overturning : "Compute meridional overturning. Related namelist var: /diagn/ vmsfint has to be a positive number. Usually we implicitly turn this off by a negative value of vmsfint.  See common/switch.F and mom/diago.F. Output only to logfile.  See 2018_12_control_test for a test."
+		tracer_averages : "Related namelist vars: /diagn/ itavg=.true. and tavgint has to be positive. Usually we implicitly turn this off by a negative value of tavgint.  See common/switch.F and mom/diago.F Output only to logfile.  See 2018_12_control_test for a test."
+		bryan_lewis_horizontal : "Bryan-Lewis (1979) horizontal diffusivity"
+		bryan_lewis_vertical : "Bryan-Lewis (1979) vertical diffusivity"
+		gent_mcwilliams : "apply Gent-McWilliams parameterization of isopycnal mixing"
+		isopycmix : "Isopycnic mixing scheme  See mom/checks"
+		fct : "compute advective fluxes using a flux-corrected transport scheme (fct, Gerdes et al., 1991, Clim. Dyn.)"
+		fct_3d : "(only with O_fct) ensures that advection does not create negative concentrations"
+		quicker : "compute advective fluexes using the quicker advection scheme"
+		save_kv : "write out kv"
+		tidal_kv : "enhancement of kv through tidal dissipation on"
+		highmix_Southern_Ocean : "Enhanced SO vertical mixing in order to get realistic SO bottom water formation in UVic. Codes from Schmidtner and Oschlies. Essentially has to be ON in UVic.  See mom/vmixc.F."
+		anisotropic_viscosity : "Anisotropic viscosity scheme of Large et al., 2001, JPO; coded by Christopher Somes,  See Somes et al., 2010, GBC, auxiliary materials for additional details.  See mom/hmixc.F"
+		save_anisotropic_viscosity : "Related to option O_anisotropic_viscosity.  Saves variables O_mvisc (meridional viscosity), O_zvisc (zonal viscosity).  See mom/mom_tavg.F."
+		increase_isopyc_diff : "See mom/isopyc.F."
+		increase_isopyc_diff_smooth : "See mom/isopyc.F."
+		increase_isopyc_diff_everywhere : "See mom/isopyc.F."
+		fourth_order_tracer_advection : "Fourth-order tracer advection scheme"
+		biharmonic : "Biharmonic mixing scheme."
+		pressure_gradient_average : "See mom/clinic.F"
+		read_denscoef : "See mom/denscoef.F"
+		save_cross_flow : "saving of diapycnal and isopycnal components of ts fluxes Related namelist var: /diagn/ crossint.   See common/switch.F.  seems not to be used any more"
+		save_mixing_coeff : "saving of estimated mixing coefficients. Related namelist var: /diagn/ cmixint.  See common/switch.F and mon/diag.F"
+		save_convection_full : "Save temperature change due to explicit convection. Related namelist var: /diagn/ exconvint.  See common/switch.F and mom/tracer.F.  we usually do not apply this, no value set in control.in, default is -365000"
+		matrix_sections : "x-z printouts. Related namelist var: /diagn/ prxzint.  See common/switch.F.  potentially no longer in use?"
+		show_external_mode : "external mode printout. Related namelist var: /diagn/ extint.  See common/switch.F"
+		tracer_yz : "write the zonally averaged tracer components. Related namelist var: /diagn/ tyzint.  See common/switch.F"
+		show_zonal_mean_of_sbc : "Do boundary condition diagnosis. Related namelist var: /diagn/ zmbcint.  See common/switch.F"
+		diagnostic_surf_height : "Accumulate the forcing or \"average and write\" the diagnostic surface height. Related namelist vars:  /diagn/ dspint, dspper.  See common/switch.F"
+		xbts : "Accumulate or \"average and write\" XBT data. What are XBT data? Related namelist vars:  /diagn/ xbtint, xbtper.  See common/switch.F"
+		mom_tbt : "Accumulate or \"average and write\" XBT data. Related namelist vars: /diagn/ tbtint, tbtper.  See common/switch.F"
+		meridional_tracer_budget : "Accumulate or \"average and write\" the meridional tracer budget. Related namelist vars:  /diagn/ tmbint, tmbper.  See common/switch.F"
+		
+		npzd : ""
+		npzd_alk : ""
+		npzd_nitrogen : ""
+		npzd_iron : ""
+		npzd_no_vflux : ""
+		npzd_o2 : ""
+		npzd_cdom_attenuation : ""
+		npzd_subgridbathy : ""
+		save_npzd : ""
+		
+		opem : ""
+		opem_pos : ""
+}
+
+module Biogeochemistry {
+	features
+		npzd : "Turn on the NPZD (Nutrient-Phytoplankton-Zooplankton-Detritus) model"
+		npzd_alk : "If ON, the NPZD model affects ocean alkalinity via nutrient uptake (remineralisation) etc"
+		npzd_nitrogen : "If ON, the original PO4-PHY-ZOO-DET model it extended by two more tracers (NO3, DIAZ) and related processes"
+		npzd_no_vflux : ""
+		npzd_o2 : "If ON, the model is extended by O2 as another tracers and the NPZD model processes affect oxygen"
+		save_npzd : "Write out diagnostics of the NPZD model to tavg and tsi output files; includes diagnostics like NPP, grazing, export production, remineralisation, nitrogen fixations, etc."
+		npzd_extra_diagnostics : "Write out even more diagnostics of the NPZD model, e.g., the phosphate and nitrate limitation terms (see mom/tracer.F) for details;"
+		npzd_fe_limitation : "Turn on the non-prognostic iron mask model; MP: not compatible with O_npzd_iron"
+		zoop_graz_upper_temp_limit : "MP: default was ON for the original NPZD model"
+		no_remi_w_no_no3 : ""
+		npzd_cdom_attenuation : "In Levin's iron model"
+		light_bug_in_Ref_Run : "In Levin's iron model"
+		zoop_not_o2_limited : "In Levin's iron model"
+		npzd_iron : "Turn on Levin's prognostic iron model"
+		npzd_iron_diagnostics : "In Levin's iron model"
+		npzd_chl : "Variable Chl:C in Levin's iron model (MP: not compatible with O_opem)"
+		npzd_subgridbathy : "Subgrid bathymetry"
+		npzzd : "Add a second zooplankton tracer"
+		opem : "Turn on optimality-based phyto- and zooplankton.  Also allow for decoupled C:N:P in phytoplankton, diazotrophs and detritus.  Chl:C is variable but not dynamic (Chl is not a tracer) by default.  It can be calculated from O_phyt_chlc and  O_diaz_chlc in the tavg output file."
+		opem_chl : "Turn on dynamic Chl as separate tracers (MP: not tested yet)"
+		opem_pos : "Keep plankton and detritus tracers with option O_opem non-negative by adding the SMS terms before calculating advection and diffusion and then restricting diffusion in subroutine check_diff (in subroutine tracer), and by redistributing some of the (positive) tracer within the same filtering strip in subroutine filt with option O_fourfil.  Requires O_fct, O_fct_3d, O_isopycmix"
+}
+
+module Sediment {
+    features
+        sed : "Turned ON, the CaCO3 sediment module is used; default is OFF, but mainly for the reason that spinning up the sediment takes several 10kyrs of model run time"
+        sed_weath_diag : "Turned ON, the global weathering is diagnosed from the current model global integral of CaCO3 burial; option is turned on during spin-up of the CaCO3 module. Turned OFF, use namelist value (control.in: /sed/ weath) to compute weathflx, option is usually turned off during transient runs with the CaCO3 module."
+        sed_uncoupled : ""
+        sed_constrain_rainr : ""
+        sed_constrain_weath : "ON: prevent negative weathering, OFF: weathering is allowed to become negative"
+}
+
+module Carbon {
+	features
+        carbon : "if turned on, o_dic is a prognostic tracer of total dissolved inorganic carbon in the model, which is effected by the NPZD module processes, gas exchange with the atmosphere, eventually the pelagic and benthic CaCO3 cycle and terrestrial weathering, and ocean tranports"
+        carbon_co2_2d : "?? resolving atmospheric CO2 in 2D; default is OFF since we usually work with 1 atmospheric box only"
+        carbon_uncoupled : "Likely outdated? WK only found this option in the UVic 2.9.0 source and in Levins code, not in updates code from UVic 2.9-Keller-Eby merge 08.2014. In Levins code it is used instead of O_co2ccn_user"
+		save_carbon_carbonate_chem : "Save surface ocean pH, Omega-ca, Omega-ar, CO3) to tavg, tsi. (O_phsur, O_ocalcsur, O_oaragsur, O_co3sur)"
+		save_carbon_totals : "Save total ocean carbon to tavg, tsi (O_totcarb)"
+		co2emit_diag : "Diagnose emissions consistent with applied CO2 ccn (i.e. RC path, see option O_co2ccn)"
+		co2emit_track_sat : "CO2 emissions are calculated tracking a prescribed surface air temperature path  Input file: data/A_sattrack.nc  See common/co2data.F: satdata()"
+		co2emit_track_co2 : "CO2 emissions are calculated tracking a prescribed atmospheric CO2 concentration path  Input file: data/A_co2track.nc  See common/co2data.F: co2ccndata()  Note the subtle difference to the O_co2ccndata option with respect to the coupling of atmosphere and ocean vs. land, respectively!"
+        carbon_14 : "if turned on 14C-DIC is an additional ocean tracer"
+        carbon_14_coupled : ""
+        save_carbon_carbonate_chem : ""
+        co2emit_diag : ""
+        co2emit_track_sat : ""
+        co2emit_track_co2 : ""
+        save_carbon_totals : ""
+        c14ccn_data : "See section forcing data"
+		c14ccn_data_transient : "See section transient forcing"
+		c14ccn_data_transient_repyr : ""
+		carbon_fnpzd : "A fixed npzd model? To be explored in more detail. Not very well described.  See mom/tracer.F."
+		co2ccn_user : "Potentially outdated? Only used very rarely (and only in negated form), e.g. in common/gasbc.F."
+}
+
+module Forcing {
+    features
+        co2ccn_data : "Atmospheric CO2 follows prescribed atmospheric CO2 concentration data  Input file: data/A_co2.nc  See common/co2data.F: co2ccndata() namelist /carbon/ co2ccn default: 280 ppm"
+        co2emit_data : "CO2-emissions from fossil fuel burning and land use change / deforestation affect atmospheric CO2  Input file: data/F_co2emit.nc  See common/co2data.F: co2emitdata() namelist /carbon/ co2emit"
+        co2emit_data_land : "If ON (and O_co2emit_data_fuel OFF)  co2emit = co2emit_land, i.e., co2emit_fuel data are ignored"
+        co2emit_data_fuel: "If ON (and O_co2emit_data_land OFF)  co2emit = co2emit_fuel, i.e., co2emit_land data are ignored"
+		agric_data : "Read and interpolate agricultural data  Input file: data/L_agricfra.nc  See embm/gvsbc.F: gvsbc() default (if file does not exist): agric(:,: )=0"
+        landice_data : "Read and interpolate land ice data  Input file: data/L_ice.nc  See common/icedata.F: icedata() and embm/embmio.F"
+        solar_data : "Read and interpolate solar forcing data  Input file: data/A_solarcon.nc  See common/solardata.F: solardata() and common/gasbc.F"
+        c14ccn_data : "Read and interpolate atmospheric boundary conditions for 14C  Input file: data/A_dc14.nc  See common/c14data.F"
+        volcano_data : "Read and interpolate volcanic data  Input file: data/A_volcfor.nc  See common/volcdata.F: volcdata() and common/gasbc.F"
+        sulphate_data : "Read and interpolate sulphate data for anthropogenic sulphate forcing (increase in surface albedo).  Input file: data/A_sulphod.nc  See common/sulphdata.F: sulphdata() and common/gosbc.F"
+		sulphate_data_direct : "reduce sulphate forcing to just the direct effect  See common/gosbc.F"
+        sulphate_data_indirect : "reduce sulphate forcing to just the indirect effect  See common/gosbc.F"
+        aggfor_data : "Read and interpolate additional (non-CO2) greenhouse gas forcing data  Input file: data/A_aggfor.nc  See common/aggdata.F: aggdata() and common/gasbc.F"
+        cfcs_data : "Read and interpolate atmospheric boundary conditions for CFC11 and CFC12 (1D data)  Input file: data/A_cfc.nc  See common/cfcdata.F Option usually implies also: O_cfcs_data_transient"
+        orbit_user : "In 2.8 uvic_embm_orbit_user was used for user defined user defined orbital parameters. Outdated? Option is only once used in embm/setembm.F in negated form."
+}
+
+module ForcingTransient {
+    features
+        co2ccn_data_transient : "Atmospheric CO2 follows prescribed atmospheric CO2 concentration data  Input file: data/A_co2.nc   see common/co2data.F: co2ccndata()"
+        co2emit_data_transient : "CO2-emissions from fossil fuel burning and land use change/deforestation affect atmospheric CO2  Input file: data/F_co2emit.nc  See common/co2data.F: co2emitdata()"
+        agric_data_transient : "Read and interpolate agricultural data  Input file: data/L_agricfra.nc  See embm/gvsbc.F: gvsbc()"
+		landice_data_transient : "Read and interpolate land ice data  Input file: data/L_ice.nc  See common/icedata.F: icedata() and embm/embmio.F"
+        solar_data_transient : "Read and interpolate solar forcing data  Input file: data/A_solarcon.nc;   See common/solardata.F: solardata() and common/gasbc.F"
+        orbit_transient : ""
+        volcano_data_transient : "Read and interpolate volcanic data  Input file: data/A_volcfor.nc;   See common/volcdata.F: volcdata() and common/gasbc.F"
+        sulphate_data_transient : "Read and interpolate sulphate data for anthropogenic sulphate forcing (increase in surface albedo).   Input file: data/A_sulphod.nc;   See common/sulphdata.F: sulphdata() and  common/gosbc.F"
+        aggfor_data_transient : "Read and interpolate additional (non-CO2) greenhouse gas forcing data  Input file: data/A_aggfor.nc See common/aggdata.F:  aggdata() and  common/gasbc.F"
+        cfcs_data_transient : "Read and interpolate atmospheric boundary conditions for CFC11 and CFC12 (1D data) Input file: data/A_cfc.nc See common/cfcdata.F"
+        c14ccn_data_transient : "Read and interpolate atmospheric boundary conditions for 14C  Input file: data/A_dc14.nc  See common/c14data.F"
+}
+
+module Freshwater {
+    features
+        fwa : ""
+        fwa_compevap : ""
+        fwa_precip : ""
+}
+
+module Sealevel {
+    features
+        sealev : ""
+        sealev_data : ""
+        sealev_data_transient : ""
+        sealev_salinity : ""
+}
+
+module Timestep {
+    features
+        tai_otsf : "Save maximum and minimum meridional overturning to tsi (O_motmax, O_motmin).  See mom/mom_tsi.F"
+        tai_ns : "Save Norther and Southern hemispheric means of surface air temperature etc.  See embm/embm_tsi.F"
+        tai_lo : "Save Land and Ocean means of surface air temperature, precipitation, albedo etc. to tsi.   See embm/embm_tsi.F"
+        tai_slh : "Save relative sea level height to tsi (O_dsealev)  See mom/mom_tsi.F"
+        tai_rad : "Save several terms of the radiative balance to tsi (e.g., long wave outgoing radiation)  See embm/embm_tsi.F"
+        tai_slh_from_averages : "See mom/diago.F for details"
+		tai_otsf_from_averages : "See mom/diago.F for details"
+}
+
+module Units {
+    features
+        units_temperature_Celsius : ""
+        units_time_years : "Save time in units of  ON: years; OFF: days"
+        save_time_relyear0 : "ON: Save time either/or  'years since 0-1-1',  'days since 0-1-1';  OFF:  'years since 1-1-1',  'days since 1-1-1'"
+		save_time_startper : "See, e.g., common/global_sums.F"
+        save_time_endper : "See, e.g., common/global_sums.F"
+}
+ 

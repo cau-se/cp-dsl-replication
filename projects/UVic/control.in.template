@@ -1,0 +1,19 @@
+for uvic
+
+file "control.in" : '''#{for allModules join "\n" use moduleTemplate(it)}'''
+
+template moduleTemplate(Module module) '''#{if module.name == 'generic' for module.allGroups join "\n" use groupTemplate(it)}'''
+
+template groupTemplate(Group group) ''' &#{group.name} #{for group.allParameters join ", " use parameterTemplate(it)} /'''
+
+template parameterTemplate(Parameter parameter) '''#{parameter.name}=#{use valueTemplate(parameter.value)}'''
+
+template valueTemplate(top value) '''#{switch value
+	is float value
+	is int value
+	is boolean '''.#{value}.'''
+	is string ''''#{value}' '''
+	is float[] '''#{for value join "," use valueTemplate(it)}'''
+	default '''Error'''
+	end
+}'''

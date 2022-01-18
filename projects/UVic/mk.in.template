@@ -1,0 +1,54 @@
+for uvic
+
+file "mk.in" : '''
+# Add version directory for use
+# for Uvic_ESCM 2.9 version reference run with the opem extension
+
+### Add your directory path here:
+Version_Directory = #{general.version_directory}
+
+Model_Options =
+#{for features join "\n" use featureTemplate(it)}
+
+### Module based options
+#{for modules join "\n" use modulesTemplate(it)}
+
+#{for source.code_extensions join "\n" use codeExtensionsTemplate(it, i#)}
+### source code directories (if excluded, exclude equivalent option)
+#{for source.directories join "\n" use printSourceDirectory(it, i#)}
+
+### data source directories
+Data_Source(1) = data.100.100.19
+
+### miscellaneous settings
+Executable_File = #{general.executable_file}
+Input_File = control.in
+Output_File = #{general.output_file}
+Code_Directory = #{general.code_directory}
+Data_Directory = #{general.data_directory}
+Updates_Level = #{general.updates_level}
+No_Warnings = #{general.no_warnings}
+Preprocessor = #{general.preprocessor}
+Libraries = #{for general.libraries join " " '''-l#{it}'''} #{for general.library_paths join " " '''-L#{it}'''}
+
+Compiler_F = #{general.compiler_f}
+Compiler_f = #{general.compiler_f}
+Compiler_F90 = #{general.compiler_f90}
+Compiler_f90 = #{general.compiler_f90}
+Linker = #{general.linker}
+'''
+
+template codeExtensionsTemplate(FileType type, int count)
+	switch type
+		case f90 '''Code_Extension(#{count}) = f90'''
+		case f '''Code_Extension(#{count}) = f'''
+	end
+
+template printSourceDirectory(string filename, int number) '''Source_Directory(#{number}) = #{filename}'''
+
+template modulesTemplate(Module module) '''
+
+### Module #{module.name}
+#{for module.features join "\n" use featureTemplate(it)}'''
+
+template featureTemplate(Feature feature) '''#{if feature.deactivated "#"}O_#{feature.name}'''

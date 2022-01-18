@@ -1,0 +1,49 @@
+for mitgcm
+
+file '''#{name}/data''' : '''
+# Model parameters
+# Continuous equation parameters
+#{use groupTemplate(groups['PARM01'])}
+#{use groupTemplate(groups['PARM02'])}
+#{use groupTemplate(groups['PARM03'])}
+#{use groupTemplate(groups['PARM04'])}
+#{use groupTemplate(groups['PARM05'])}
+'''
+
+file '''#{name}/eedata''' when exists(groups['EEPARMS']) : '''
+# Lines beginning "#" are comments
+#  nTx      :: No. threads per process in X
+#  nTy      :: No. threads per process in Y
+# debugMode :: print debug msg (sequence of S/R calls)
+#{use groupTemplate(groups['EEPARMS'])}
+'''
+
+file '''#{name}/data.mnc''' when exists(modules['MNC']) : '''#{use dataTemplate(modules['MNC'])}'''
+file '''#{name}/data.gmredi''' when exists(modules['GMRedi']) : '''#{use dataTemplate(modules['GMRedi'])}'''
+file '''#{name}/data.rbcs''' when exists(modules['RBCS']) : '''#{use dataTemplate(modules['RBCS'])}'''
+file '''#{name}/data.layers''' when exists(modules['Layers']) : '''#{use dataTemplate(modules['Layers'])}'''
+
+
+template dataTemplate(Module module) '''
+# #{module.name}
+#{for module.groups join "\n" use groupTemplate(it)}
+'''
+
+template groupTemplate(Group group) '''
+ &#{group.name}
+ #{for group.parameters join ",\n " use parameterTemplate(it)}
+ &
+'''
+
+template parameterTemplate(Parameter parameter) '''#{parameter.name}=#{use valueTemplate(parameter.value)}'''
+
+template valueTemplate(top value) '''#{switch value
+	is float value
+	is int value
+	is boolean '''.#{if value == true "TRUE" else "FALSE"}.'''
+	is string ''''#{value}' '''
+	is float[] '''#{for value join "," use valueTemplate(it)}'''
+	is float[,] '''#{for value join "," use valueTemplate(it)}'''
+	default '''Type not supported by template'''
+	end
+}'''
