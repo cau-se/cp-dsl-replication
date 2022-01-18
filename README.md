@@ -17,6 +17,13 @@ is necessary.
 - Jupyter Kernel `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
 - Jupyter LSP `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
 
+The remainder contains
+- Setup of the Editors
+  - Eclipse Setup
+  - Vim Setup
+  - Jupyter Setup
+- Utilizing the CP-DSL
+  - Using Eclipse
 
 # Setup of Editors
 
