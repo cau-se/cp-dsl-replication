@@ -1,7 +1,9 @@
 configuration fiststeps : uvic
 
 features
-	even_fluxes, cyclic, time_averages, time_step_monitor, sbc_in_memory, fourfil, constant_flux_reference
+	even_fluxes, cyclic, time_averages, time_step_monitor, sbc_in_memory, fourfil, constant_flux_reference,
+	global_sums, align_coupling_output
+	
 	
 parameters
 	general {
@@ -18,7 +20,7 @@ parameters
 	}
 	source {
 		code_extensions: [ f90, f, f, f, f, f, f, f ]
-		directories: [ "updates", "source/common", "source/netcdf", "source/embm", "source/ice", "source/mtlm", "source/mom", "source/sed" ]
+		directories: [ "updates/f90", "source/common", "source/netcdf", "source/embm", "source/ice", "source/mtlm", "source/mom", "source/sed" ]
 	}
 	data {
 		directories: [ "data.100.100.19" ]
