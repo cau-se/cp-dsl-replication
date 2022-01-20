@@ -164,7 +164,7 @@ module MNC {
 	}
 }
 module PTRACERS{
-	group PTRACERS_01{
+	group PTRACERS_PARM01{
 		def PTRACERS_numInUse int:""
  		def PTRACERS_advScheme int :""
  		def PTRACERS_diffKh int :""
