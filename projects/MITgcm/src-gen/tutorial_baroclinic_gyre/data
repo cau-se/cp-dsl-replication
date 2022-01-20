@@ -1,0 +1,61 @@
+
+# Model parameters
+# Continuous equation parameters
+
+ &PARM01
+ viscAh=5000.0,
+ viscAr=0.01,
+ no_slip_sides=.TRUE.,
+ no_slip_bottom=.FALSE.,
+ diffKhT=1000.0,
+ diffKrT=1.0E-5,
+ ivdc_kappa=1.0,
+ implicitDiffusion=.TRUE.,
+ eosType='LINEAR' ,
+ tRef=30.0,27.0,24.0,21.0,18.0,15.0,13.0,11.0,9.0,7.0,6.0,5.0,4.0,3.0,2.0,
+ tAlpha=2.0E-4,
+ sBeta=0.0,
+ rhoNil=999.8,
+ gravity=9.81,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ saltStepping=.FALSE.
+ &
+
+
+ &PARM02
+ cg2dTargetResidual=1.0E-7,
+ cg2dMaxIters=1000
+ &
+
+
+ &PARM03
+ startTime=0.0,
+ endTime=12000.0,
+ deltaT=1200.0,
+ pChkptFreq=6.2208E8,
+ chkptFreq=1.5552E8,
+ dumpFreq=3.1104E7,
+ monitorFreq=1200.0,
+ monitorSelect=2,
+ tauThetaClimRelax=2592000.0
+ &
+
+
+ &PARM04
+ usingSphericalPolarGrid=.TRUE.,
+ delX=62.0,
+ delY=62.0,
+ xgOrigin=-1.0,
+ ygOrigin=14.0,
+ delR=50.0,60.0,70.0,80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,170.0,180.0,190.0
+ &
+
+
+ &PARM05
+ bathyFile='bathy.bin' ,
+ zonalWindFile='windx_cosy.bin' ,
+ thetaClimFile='SST_relax.bin' 
+ &
+

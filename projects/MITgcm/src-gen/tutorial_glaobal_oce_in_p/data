@@ -1,0 +1,83 @@
+
+# Model parameters
+# Continuous equation parameters
+
+ &PARM01
+ tRef=300.0,
+ sRef=525.0,
+ viscAh=300000.0,
+ no_slip_sides=.TRUE.,
+ viscAr=107216.12,
+ no_slip_bottom=.FALSE.,
+ diffKhT=1000.0,
+ diffKrT=5015.4526,
+ diffKhS=1000.0,
+ diffKrS=5015.4526,
+ cosPower=0.05,
+ implicitDiffusion=.TRUE.,
+ ivdc_kappa=1.0030905E9,
+ gravity=9.081,
+ rhoConst=1035.0,
+ rhoConstFresh=1000.0,
+ buoyancyRelation='OCEANICP' ,
+ integr_GeoPot=1,
+ eosType='JMD95P' ,
+ useNHMTerms=.TRUE.,
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ nonlinFreeSurf=4,
+ hFacInf=0.02,
+ hFacSup=2.0,
+ doResetHFactors=.TRUE.,
+ readBinaryPrec=64,
+ writeBinaryPrec=64
+ &
+
+
+ &PARM02
+ cg2dMaxIters=200,
+ cg2dTargetResidual=1.0E-9
+ &
+
+
+ &PARM03
+ startTime=0.0,
+ endTime=3456000.0,
+ deltaTMom=1200.0,
+ deltaTtracer=172800.0,
+ deltaTFreeSurf=172800.0,
+ deltaTClock=172800.0,
+ abEps=0.01,
+ pChkptFreq=3.1104E9,
+ dumpFreq=3.1104E9,
+ taveFreq=3.1104E9,
+ monitorFreq=1.0,
+ periodicExternalForcing=.TRUE.,
+ externForcingPeriod=2592000.0,
+ externForcingCycle=3.1104E7,
+ tauThetaClimRelax=5184000.0
+ &
+
+
+ &PARM04
+ usingSphericalPolarGrid=.TRUE.,
+ dxSpacing=4.0,
+ dySpacing=4.0,
+ top_Pres=1.0E-6,
+ delR=7103300.0,6570548.0,6041670.0,5516436.0,4994602.0,4475903.0,3960063.0,3446790.0,2935781.0,2426722.0,1919291.0,1413156.1,1008846.06,705919.0,504089.06,
+ ygOrigin=-80.0
+ &
+
+
+ &PARM05
+ bathyFile='topog.0bin' ,
+ geoPotAnomFile='deltageopotjmd95.0bin' ,
+ hydrogThetaFile='lev_t.0bin' ,
+ hydrogSaltFile='lev_s.0bin' ,
+ zonalWindFile='trenberth_taux.0bin' ,
+ meridWindFile='trenberth_tauy.0bin' ,
+ thetaClimFile='lev_sst.0bin' ,
+ surfQnetFile='shi_qnet.0bin' ,
+ EmPmRFile='shi_empmr.0bin' 
+ &
+

@@ -22,6 +22,7 @@ file '''#{name}/data.mnc''' when exists(modules['MNC']) : '''#{use dataTemplate(
 file '''#{name}/data.gmredi''' when exists(modules['GMRedi']) : '''#{use dataTemplate(modules['GMRedi'])}'''
 file '''#{name}/data.rbcs''' when exists(modules['RBCS']) : '''#{use dataTemplate(modules['RBCS'])}'''
 file '''#{name}/data.layers''' when exists(modules['Layers']) : '''#{use dataTemplate(modules['Layers'])}'''
+file '''#{name}/data.ptracers''' when exists(modules['PTRACERS']) : '''#{use dataTemplate(modules['PTRACERS'])}'''
 
 
 template dataTemplate(Module module) '''

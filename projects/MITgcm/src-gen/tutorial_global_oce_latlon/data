@@ -1,0 +1,77 @@
+
+# Model parameters
+# Continuous equation parameters
+
+ &PARM01
+ tRef=300.0,
+ sRef=525.0,
+ viscAr=0.001,
+ viscAh=500000.0,
+ diffKhT=0,
+ diffKrT=3.0E-5,
+ diffKhS=0.0,
+ diffKrS=3.0E-5,
+ rhoConst=1035,
+ rhoConstFresh=1000,
+ eosType='JMD95Z' ,
+ ivdc_kappa=100,
+ implicitDiffusion=.TRUE.,
+ allowFreezing=.TRUE.,
+ exactConserv=.TRUE.,
+ useRealFreshWaterFlux=.TRUE.,
+ useCDscheme=.TRUE.,
+ hFacMin=5,
+ hFacMindr=50,
+ readBinaryPrec=32
+ &
+
+
+ &PARM02
+ cg2dMaxIters=500,
+ cg2dTargetResidual=1.0E-13
+ &
+
+
+ &PARM03
+ nIter0=0,
+ nTimeSteps=20,
+ deltaTMom=1800,
+ tauCD=321428,
+ deltaTtracer=86400,
+ deltaTClock=86400,
+ deltaTfreesurf=86400,
+ abEps=0.1,
+ pChkptFreq=1728000,
+ dumpFreq=864000,
+ taveFreq=864000,
+ monitorFreq=1,
+ tauThetaClimRelax=5184000,
+ tauSaltClimRelax=15552000,
+ periodicExternalForcing=.TRUE.,
+ externForcingPeriod=2592000,
+ externForcingCycle=31104000
+ &
+
+
+ &PARM04
+ usingSphericalPolarGrid=.TRUE.,
+ delR=Type not supported by template,
+ ygOrigin=-80,
+ dySpacing=4,
+ dxSpacing=4
+ &
+
+
+ &PARM05
+ bathyFile='bathymetry.bin' ,
+ hydrogThetaFile='lev_t.bin' ,
+ hydrogSaltFile='lev_s.bin' ,
+ zonalWindFile='trenberth_taux.bin' ,
+ meridWindFile='trenberth_tauy.bin' ,
+ thetaClimFile='lev_sst.bin' ,
+ saltClimFile='lev_sss.bin' ,
+ surfQnetFile='ncep_qnet.bin' ,
+ the_run_name='global_oce_latlon' ,
+ EmPmRFile='ncep_emp.bin' 
+ &
+

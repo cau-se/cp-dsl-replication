@@ -1,0 +1,117 @@
+// ::::::::::::::::::::
+// | Model parameters |
+// ::::::::::::::::::::
+//
+// Continuous equation parameters
+configuration tutorial_glaobal_oce_in_p:mitgcm
+ parameters
+ PARM01{
+ tRef : 15*20.0
+ sRef : 15*35.0
+ viscAh :3.0E5
+ no_slip_sides:true
+ viscAr :1.0721611620915750e5
+//viscAz :1.067E-3
+ no_slip_bottom:false
+ diffKhT:1.0E3
+ diffKrT:5.0154525811125000e3
+//diffKzT:0.05E-4
+ diffKhS:1.0E3
+ diffKrS:5.0154525811125000e3
+//diffKzS:0.05E-4
+ cosPower:0.05
+ implicitDiffusion:true
+ ivdc_kappa:1.0030905162225000e9
+//ivdc_kappa:10.00
+ gravity:9.081
+ rhoConst:1035.0
+ rhoConstFresh:1000.0
+ buoyancyRelation:'OCEANICP'
+ integr_GeoPot:1
+ eosType:'JMD95P'
+ useNHMTerms:true
+ implicitFreeSurface:true
+ exactConserv:true
+ nonlinFreeSurf:4
+ hFacInf:0.02
+ hFacSup:2.00
+//- to check that it has no impact:
+ doResetHFactors:true
+//useRealFreshWaterFlux:true
+ readBinaryPrec:64
+ writeBinaryPrec:64
+ }
+
+// Elliptic solver parameters
+ PARM02{
+ cg2dMaxIters:200
+ cg2dTargetResidual:1.0E-9
+ }
+
+// Time stepping parameters
+ PARM03 {
+ startTime :           0.0
+ endTime   :     3456000.0
+// after 100 years of intergration one gets a reasonable flow field
+//endTime   : 3110400000.0
+ deltaTMom      :   1200.00
+ deltaTtracer   : 172800.00
+ deltaTFreeSurf : 172800.00
+ deltaTClock    : 172800.00
+ abEps     : 0.01
+ pChkptFreq  : 3110400000.0
+ dumpFreq    : 3110400000.0
+ taveFreq    : 3110400000.0
+ monitorFreq :   1.0
+ periodicExternalForcing:true
+ externForcingPeriod:2592000.0
+ externForcingCycle:31104000.0
+ tauThetaClimRelax:5184000.00
+ }
+
+// Gridding parameters
+ PARM04{
+ usingSphericalPolarGrid:true
+ dxSpacing:4.0
+ dySpacing:4.0
+//Ro_SeaLevel:53023122.0566084
+ top_Pres:1.0E-6
+ delR:[7103300.0720021, 6570548.0440790, 6041670.0010249,
+      5516436.0666057, 4994602.0034410, 4475903.0435290,
+      3960063.0245801, 3446790.0312651, 2935781.0405664,
+      2426722.0705046, 1919291.0315988, 1413156.0804970,
+      1008846.0750166,  705919.0025481,  504089.0693499]
+ ygOrigin:-80.0
+ }
+
+// Input datasets
+ PARM05{
+ bathyFile      :'topog.0bin'
+ geoPotAnomFile :'deltageopotjmd95.0bin'
+ hydrogThetaFile:'lev_t.0bin'
+ hydrogSaltFile :'lev_s.0bin'
+ zonalWindFile  :'trenberth_taux.0bin'
+ meridWindFile  :'trenberth_tauy.0bin'
+ thetaClimFile  :'lev_sst.0bin'
+//saltClimFile   :'lev_sss.0bin'
+ surfQnetFile   :'shi_qnet.0bin'
+ EmPmRFile      :'shi_empmr.0bin'
+ }
+ 
+ EEPARMS{
+ nTx:1
+ nTy:1
+ }
+ size{
+ 	sNx :  90
+sNy :  20
+OLx :   2
+OLy :   2
+nSx :   1
+nSy :   2
+nPx :   1
+nPy :   1
+Nx  : 90*1*1
+Ny  : 20*2*1
+Nr  :  15
+ }

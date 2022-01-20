@@ -12,6 +12,7 @@ group PARM01 {
  	def implicitViscosity boolean : ""
  	def eosType string : ""
  	def tRef float[] : ""
+ 	def sRef float : ""
  	def tAlpha float : ""
  	def sBeta float : ""
  	def rhoNil float : ""
@@ -32,6 +33,32 @@ group PARM01 {
  	def hFacMin float : ""
  	def tempAdvScheme int : ""
  	def	staggerTimeStep boolean : ""
+ 	def viscAz float : ""
+ 	def diffKzT float : ""
+ 	def readBinaryPrec int : ""
+ 	def useSingleCPUio boolean : ""
+ 	def globalFiles boolean : ""
+ 	def diffKhS float :""
+ 	def diffKrS float : ""
+ 	def rhoConstFresh int : ""
+ 	def  allowFreezing boolean :""
+ 	def useRealFreshWaterFlux boolean: "" 
+ 	def useCDscheme boolean:""
+    def hFacMin int:""
+    def hFacMindr int:"" 
+    def readBinaryPrec int :"" 
+    def cosPower float :""
+    def buoyancyRelation string:""
+ 	def integr_GeoPot int:""
+    def useNHMTerms boolean:""
+ 	def nonlinFreeSurf int: ""
+ 	def hFacInf float:""
+ 	def hFacSup float :""
+ 	def doResetHFactors boolean :""
+  	def writeBinaryPrec int :""
+  	def diffKzS float :""
+  	def Ro_SeaLevel float:""
+    
 }
 
 group PARM02 {
@@ -52,6 +79,19 @@ group PARM03 {
  	def monitorSelect int : ""
  	def tauThetaClimRelax float : ""
  	def momDissip_In_AB boolean : ""
+ 	def deltaTmom float :""
+ 	def deltaTtracer float: ""
+ 	def abEps float: ""
+ 	def deltaTMom int : ""
+ 	def tauCD int : ""
+ 	def deltaTClock int : ""
+    def deltaTfreesurf int : ""
+    def taveFreq int : ""
+    def tauSaltClimRelax int : ""
+ 	def periodicExternalForcing boolean:""
+ 	def externForcingPeriod int:""
+ 	def externForcingCycle int :""
+ 	def deltaTFreeSurf float : ""
 }
 
 group PARM04 {
@@ -62,6 +102,10 @@ group PARM04 {
  	def xgOrigin float : ""
  	def ygOrigin float : ""
  	def delR float : ""
+ 	def delZ float:""
+ 	def dySpacing int:""
+ 	def dxSpacing int:""
+ 	def top_Pres float :""
 }
 
 group PARM05 {
@@ -70,6 +114,12 @@ group PARM05 {
  	def meridWindFile file : ""
  	def thetaClimFile file : ""
  	def hydrogThetaFile file : ""
+ 	def saltClimFile string:""
+    def surfQnetFile string:""
+    def the_run_name string:""
+ 	def EmPmRFile string:""
+ 	def hydrogSaltFile string: ""
+ 	def geoPotAnomFile string: ""
 }
 
 group EEPARMS {
@@ -107,6 +157,22 @@ module MNC {
  		def monitor_mnc boolean : ""
  		def mnc_use_outdir boolean : ""
  		def mnc_outdir_str string : ""
+ 		def mnc_use_name_ni0 boolean: ""
+ 		def mnc_outdir_date boolean : ""
+ 		def pickup_write_mnc boolean :""
+ 		def pickup_read_mnc boolean : ""
+	}
+}
+module PTRACERS{
+	group PTRACERS_01{
+		def PTRACERS_numInUse int:""
+ 		def PTRACERS_advScheme int :""
+ 		def PTRACERS_diffKh int :""
+ 		def PTRACERS_diffK4 float :""
+ 		def PTRACERS_diffKr int: ""
+ 		def PTRACERS_Iter0 int :""
+ 		def PTRACERS_initialFile string[]:""
+ 		def PTRACERS_names string[]:""
 	}
 }
 
@@ -120,6 +186,10 @@ module GMRedi {
   		def GM_background_K float : ""
   		def GM_taper_scheme string : ""
   		def GM_AdvForm boolean : ""
+  		def GM_maxSlope float : ""
+  		def GM_Kmin_horiz  float : ""
+  		def GM_Scrit float : ""
+  		def GM_Sd float : ""
   	}
 }
 

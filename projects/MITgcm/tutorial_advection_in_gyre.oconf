@@ -1,0 +1,98 @@
+configuration tutorial_advection_in_gyre:mitgcm
+
+parameters
+PARM01{
+ tRef:20
+ sRef:0.0  
+ viscAz:1.0E-2  
+ viscAh:4.0E2
+ no_slip_sides:true
+ no_slip_bottom:true
+ diffKhT:4.0E2
+ diffKzT:1.0E-2 
+ tAlpha:2.0E-4
+ sBeta:0
+ gravity:9.81
+ gBaro:9.81
+ rigidLid:false
+ implicitFreeSurface:true
+ eosType:'LINEAR'
+ readBinaryPrec:64 
+ useSingleCPUio:true
+ globalFiles:true  
+}
+PARM02{
+ cg2dMaxIters:1000
+ cg2dTargetResidual:1.0E-10
+ }
+ PARM03{
+ nIter0:259200
+ nTimeSteps:4
+ deltaTmom:1200.0 
+ deltaTtracer:1200.0 
+ abEps:0.1 
+ pChkptFreq:311040000.0
+ chkptFreq:0.0
+ dumpFreq:0.0
+ monitorFreq:1200
+ }
+ 
+ PARM04{
+ usingCartesianGrid:true
+ usingSphericalPolarGrid:false
+ delX:60*20000// *E3
+ delY:60*20000// *E3
+ delZ:5000 
+ }
+ PARM05{
+ bathyFile:'topog.box5000'
+ //hydrogThetaFile: // Empty parameters
+ //hydrogSaltFile: // Empty Parameters
+ zonalWindFile:'windx.m01cos2y'
+ //meridWindFile: //  Empty parameters
+ }
+ 
+ size {
+ 		sNx: 30
+        sNy: 30
+        OLx: 4
+        OLy: 4
+        nSx: 2
+        nSy: 2
+        nPx: 1
+        nPy: 1
+        Nx: sNx * nSx * nPx
+        Ny: sNy * nSy * nPy
+        Nr: 1
+ 	}
+ 
+ diagnostics { 
+ 	logs
+}  
+
+module MNC {
+ 	parameters
+	MNC_01 {
+ mnc_use_outdir:true
+ mnc_use_name_ni0:true 
+ mnc_outdir_str:'mnc_test_'
+ mnc_outdir_date:false 
+ monitor_mnc:false
+ pickup_write_mnc:false 
+ pickup_read_mnc:false 
+ 		}
+ }
+ 
+ module PTRACERS {
+ 	parameters
+	PTRACERS_01 {
+ PTRACERS_numInUse:1
+ PTRACERS_advScheme:80
+ PTRACERS_diffKh:0
+ PTRACERS_diffK4:0.0000000001E9
+ PTRACERS_diffKr:0
+ PTRACERS_Iter0:259200
+ PTRACERS_initialFile(1):'dye.bin'
+ PTRACERS_names(1):'Dye'
+ 		}
+ }
