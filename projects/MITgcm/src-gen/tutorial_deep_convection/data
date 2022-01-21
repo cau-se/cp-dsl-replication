@@ -1,0 +1,66 @@
+
+# Model parameters
+# Continuous equation parameters
+
+ &PARM01
+ tRef=400.0,
+ sRef=700.0,
+ viscAh=0.04,
+ viscAz=0.04,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.FALSE.,
+ diffKhT=0.04,
+ diffKzT=0.04,
+ f0=1.0E-4,
+ beta=0.0,
+ tAlpha=2.0E-4,
+ sBeta=0.0,
+ gravity=10.0,
+ rhoConst=1000.0,
+ rhoNil=1000.0,
+ heatCapacity_Cp=4000.0,
+ implicitFreeSurface=.TRUE.,
+ eosType='LINEAR' ,
+ nonHydrostatic=.TRUE.,
+ saltStepping=.FALSE.
+ &
+
+
+ &PARM02
+ cg2dMaxIters=1000,
+ cg2dTargetResidual=1.0E-9,
+ cg3dMaxIters=100,
+ cg3dTargetResidual=1.0E-9
+ &
+
+
+ &PARM03
+ nIter0=0,
+ nTimeSteps=3,
+ deltaT=20.0,
+ abEps=0.1,
+ pChkptFreq=43200.0,
+ chkptFreq=7200.0,
+ dumpFreq=1800.0,
+ monitorFreq=600.0,
+ monitorSelect=1,
+ monitorFreq=1.0
+ &
+
+
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ dXspacing=20.0,
+ dYspacing=20.0,
+ delZ=1000.0
+ &
+
+
+ &PARM05
+ surfQnetFile='Qnet_p32.bin' ,
+ hydrogThetaFile='T.120mn.bin' ,
+ pSurfInitFile='Eta.120mn.bin' ,
+ uVelInitFile='U.120mn.bin' ,
+ vVelInitFile='V.120mn.bin' 
+ &
+

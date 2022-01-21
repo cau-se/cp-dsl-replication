@@ -23,7 +23,7 @@ file '''#{name}/data.gmredi''' when exists(modules['GMRedi']) : '''#{use dataTem
 file '''#{name}/data.rbcs''' when exists(modules['RBCS']) : '''#{use dataTemplate(modules['RBCS'])}'''
 file '''#{name}/data.layers''' when exists(modules['Layers']) : '''#{use dataTemplate(modules['Layers'])}'''
 file '''#{name}/data.ptracers''' when exists(modules['PTRACERS']) : '''#{use dataTemplate(modules['PTRACERS'])}'''
-
+file '''#{name}/data.shap''' when exists(modules['Shap']) : '''#{use dataTemplate(modules['Shap'])}'''
 
 template dataTemplate(Module module) '''
 # #{module.name}

@@ -1,0 +1,85 @@
+configuration tutorial_deep_convection :mitgcm
+parameters
+
+PARM01{
+ tRef:20*20.0
+ sRef:20*35.0
+ viscAh:4.0E-2
+ viscAz:4.0E-2
+ no_slip_sides:false
+ no_slip_bottom:false
+ diffKhT:4.0E-2
+ diffKzT:4.0E-2
+ f0:1.0E-4
+ beta:0.0E-11
+ tAlpha:2.0E-4
+ sBeta :0.0
+ gravity:10.0
+ rhoConst:1000.0
+ rhoNil:1000.0
+ heatCapacity_Cp:4000.0
+//rigidLid:true
+ implicitFreeSurface:true
+//exactConserv:true
+ eosType:'LINEAR'
+ nonHydrostatic:true
+ saltStepping:false
+
+}
+// Elliptic solver parameters
+PARM02{
+ cg2dMaxIters:1000
+ cg2dTargetResidual:1.0E-9
+ cg3dMaxIters:100
+ cg3dTargetResidual:1.0E-9
+}
+
+// Time stepping parameters
+PARM03{
+ nIter0:0
+//endTime:43200.
+ nTimeSteps:3
+ deltaT:20.0
+ abEps:0.1
+ pChkptFreq:43200.0
+ chkptFreq:7200.0
+ dumpFreq:1800.0
+ monitorFreq:600.0
+ monitorSelect:1
+ monitorFreq:1.0
+}
+
+// Gridding parameters
+PARM04{
+ usingCartesianGrid:true
+ dXspacing:20.0
+ dYspacing:20.0
+ delZ:50*20.0
+ 
+}
+
+// Input datasets
+PARM05{
+ surfQnetFile:  'Qnet_p32.bin'
+ hydrogThetaFile:'T.120mn.bin'
+ pSurfInitFile:'Eta.120mn.bin'
+ uVelInitFile :  'U.120mn.bin'
+ vVelInitFile :  'V.120mn.bin'
+ }
+ size{
+sNx :  50
+sNy :  50
+OLx :   2
+OLy :   2
+nSx :   2
+nSy :   2
+nPx :   1
+nPy :   1
+Nx  : sNx * nSx * nPx
+Ny  : sNy * nSy * nPy
+Nr  :  50
+ }
+ EEPARMS{
+ 	
+ }
+ 

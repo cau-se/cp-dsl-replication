@@ -57,13 +57,24 @@ group PARM01 {
  	def doResetHFactors boolean :""
   	def writeBinaryPrec int :""
   	def diffKzS float :""
-  	def Ro_SeaLevel float:""
+  	def Ro_SeaLevel float : ""
+  	def tRef float[] : ""
+  	def rotationPeriod float : ""
+  	def select_rStar int : ""
+  	def uniformLin_PhiSurf boolean : ""
+  	def momViscosity boolean : ""
+  	def vectorInvariantMomentum boolean : ""
+  	def heatCapacity_Cp float : ""
+  	def nonHydrostatic boolean : ""
     
 }
 
 group PARM02 {
 	def cg2dTargetResidual float : ""
  	def cg2dMaxIters int : ""
+ 	def cg2dTargetResWunit float : ""
+ 	def cg3dMaxIters int : ""
+    def cg3dTargetResidual float :""
 }
 
 group PARM03 {
@@ -92,6 +103,14 @@ group PARM03 {
  	def externForcingPeriod int:""
  	def externForcingCycle int :""
  	def deltaTFreeSurf float : ""
+ 	def tracForcingOutAB int : ""
+ 	def pChkptFreq float: ""
+ 	def chkptFreq float : ""
+ 	def dumpFreq float : ""
+ 	def taveFreq float : ""
+    def nTimeSteps int : ""
+    def monitorFreq float : ""
+
 }
 
 group PARM04 {
@@ -106,6 +125,11 @@ group PARM04 {
  	def dySpacing int:""
  	def dxSpacing int:""
  	def top_Pres float :""
+ 	def usingCurvilinearGrid boolean : ""
+ 	def horizGridFile string: ""
+ 	def radius_fromHorizGrid float : ""
+ 	def dXspacing float : ""
+ 	def dYspacing float : ""
 }
 
 group PARM05 {
@@ -120,11 +144,15 @@ group PARM05 {
  	def EmPmRFile string:""
  	def hydrogSaltFile string: ""
  	def geoPotAnomFile string: ""
+ 	def pSurfInitFile file: ""
+ 	def uVelInitFile file : ""
+ 	def vVelInitFile file : ""
 }
 
 group EEPARMS {
 	def nTx int : ""
  	def nTy int : ""
+ 	def useCubedSphereExchange boolean : ""
 }
 
 group size {
@@ -209,5 +237,22 @@ module Layers {
 	group LAYERS_PARM01 { 
  		def layers_name string[] : ""
  		def	layers_bounds float[,] : ""
+ 	}
+}
+
+module shap_filt {
+	group SHAP_PARM01 { 
+ 		def shap_filt_uvStar boolean : ""
+ 		def shap_filt_TrStagg boolean:""
+ 		def Shap_funct int :""
+ 		def nShapT int : ""
+ 		def nShapUV int : ""
+		def nShapTrPhys int : ""
+ 		def nShapUVPhys int : ""
+		def Shap_TrLength float : ""
+		def Shap_uvLength float : ""
+		def Shap_Trtau float : ""
+		def Shap_uvtau float: ""
+		def Shap_diagFreq float : ""
  	}
 }
