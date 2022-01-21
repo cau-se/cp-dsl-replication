@@ -1,0 +1,101 @@
+configuration tuorial_plume_on_slope : mitgcm
+parameters
+PARM01{
+ tRef:60*1.0
+ sRef:60*35.0
+ viscA4:0.00E4
+ viscAh:1.0E-2
+ viscAz:1.0E-3
+ bottomDragLinear:0.0E-4
+ no_slip_sides:true
+ no_slip_bottom:true
+ diffK4T:0.0E4
+ diffKhT:0.0E-2
+ diffKzT:0.0E4
+ diffKhS:1.0E-2
+ diffKzS:1.0E-5
+ tempAdvScheme:33
+ f0:0.0e-4
+ beta:0.0E-11
+ eosType:'LINEAR'
+ tAlpha:2.0E-4
+ sBeta :0.0E-4
+ rigidLid:false
+ implicitFreeSurface:true
+ hFacMin:0.05
+ nonHydrostatic:true
+ readBinaryPrec:64
+//- not safe to use globalFiles in multi-processors runs
+//globalFiles:true
+ plotLevel:0
+}
+
+// Elliptic solver parameters
+ PARM02{
+ cg2dMaxIters:300
+ cg2dTargetResidual:1.0E-13
+ cg3dMaxIters:20
+ cg3dTargetResidual:1.0E-8
+ }
+
+// Time stepping parameters
+ PARM03{
+ nIter0:0
+ nTimeSteps:20
+//nTimeSteps:8640
+ deltaT:20.0
+ abEps:0.01
+ pChkptFreq:0.0
+ chkptFreq:0.0
+ dumpFreq:6000.0
+//taveFreq:864000.0
+ monitorSelect:2
+ monitorFreq:1.0
+ }
+
+// Gridding parameters
+ PARM04{
+ usingCartesianGrid:true
+ delXfile:'dx.bin'
+ dYspacing:200.0
+ delZ:60*3.33333333333333333333333
+ }
+
+// Input datasets
+ PARM05{
+ bathyFiLe      :'topog.slope'
+ hydrogThetaFile:'T.init'
+ surfQnetFile   :'Qnet.forcing'
+//hydrogThetaFile:'T.pickup'
+//uVelInitFile   :'U.pickup'
+//pSurfInitFile  :'Eta.pickup'
+}
+size{
+sNx :  80
+sNy :   1
+OLx :   3
+OLy :  3
+nSx :   4
+nSy :   1
+nPx :   1
+nPy :   1
+Ny  : sNy * nSy * nPy
+Nr  :  60
+}
+ module obcs{
+ 	parameters
+ 	// Open-boundaries
+ OBCS_PARM01{
+ OB_Ieast:1*-1
+ useOrlanskiEast:true
+ useOBCSbalance:true
+ OBCS_monitorFreq:400.0
+ }
+
+// Orlanski parameters
+ OBCS_PARM02{
+ Cmax:0.45
+ cVelTimeScale:1000.0
+}
+
+ }

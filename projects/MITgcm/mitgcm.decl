@@ -66,7 +66,17 @@ group PARM01 {
   	def vectorInvariantMomentum boolean : ""
   	def heatCapacity_Cp float : ""
   	def nonHydrostatic boolean : ""
-    
+  	def viscA4 float :""
+  	def bottomDragLinear float:""
+  	def diffK4T float : ""
+    def plotLevel int:""
+    def diffKrBL79surf float: ""
+    def diffKrBL79deep float: ""
+    def diffKrBL79Ho float : ""
+    def  diffKrBL79scl float: ""
+    def saltAdvScheme int      : ""
+    def hFacMindz float :""
+    def multiDimAdvection  boolean : ""
 }
 
 group PARM02 {
@@ -130,6 +140,8 @@ group PARM04 {
  	def radius_fromHorizGrid float : ""
  	def dXspacing float : ""
  	def dYspacing float : ""
+ 	def delXfile file :""
+ 	def usingCylindricalGrid boolean: ""
 }
 
 group PARM05 {
@@ -147,6 +159,9 @@ group PARM05 {
  	def pSurfInitFile file: ""
  	def uVelInitFile file : ""
  	def vVelInitFile file : ""
+ 	def bathyFiLe  file :""
+ 	def tCylIn float  : ""
+    def tCylOut float: ""
 }
 
 group EEPARMS {
@@ -201,6 +216,18 @@ module PTRACERS{
  		def PTRACERS_Iter0 int :""
  		def PTRACERS_initialFile string[]:""
  		def PTRACERS_names string[]:""
+ 		def PTRACERS_long_names string[]:""
+ 		def PTRACERS_units string[]:""
+ 		def PTRACERS_useGMRedi boolean[]:""
+ 		def PTRACERS_ref float :""
+		def PTRACERS_useGMRedi boolean :"" 
+		def PTRACERS_ref float[]: ""  
+	    def PTRACERS_useGMRedi boolean[]:"" 
+		def PTRACERS_ref float[] :""
+		def PTRACERS_EvPrRn float []: ""
+		def PTRACERS_monitorFreq float:""
+		def PTRACERS_useKPP boolean[]:""
+		def PTRACERS_useKPP boolean[]:""
 	}
 }
 
@@ -255,4 +282,48 @@ module shap_filt {
 		def Shap_uvtau float: ""
 		def Shap_diagFreq float : ""
  	}
+ 	}
+module obcs{
+ group OBCS_PARM01{
+ def OB_Ieast int : ""
+ def useOrlanskiEast boolean: ""
+ def useOBCSbalance boolean : ""
+ def OBCS_monitorFreq float :  ""
+ }
+
+ group OBCS_PARM02{
+ def Cmax float : ""
+ def cVelTimeScale float : ""
+ }
 }
+module GCHEM{
+	group GCHEM_PARM01{
+  def useDIC boolean :""
+  def nsubtime int: ""
+  def  useCFC boolean :""
+ }
+}
+module  Offline{
+	
+group OFFLINE_PARM01{
+  def UvelFile file: ""
+  def VvelFile file: ""
+  def WvelFile file : ""
+  def GMwxFile file : ""
+  def GMwyFile file: ""
+  def GMwzFile file : ""
+  def ConvFile file: ""
+  def SaltFile file: ""
+  def ThetFile file: ""
+  def SFluxFile file:""
+  def HFluxFile file:""
+ }
+	group OFFLINE_PARM02{
+  def offlineIter0 int:""
+  def deltaToffline float :""
+  def offlineForcingPeriod float:""
+  def offlineForcingCycle float:""
+}
+}
+
+

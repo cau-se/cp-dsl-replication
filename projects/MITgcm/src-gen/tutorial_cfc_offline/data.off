@@ -1,0 +1,23 @@
+
+# Offline
+
+ &OFFLINE_PARM01
+ UvelFile='../input/input_off/uVeltave' ,
+ VvelFile='../input/input_off/vVeltave' ,
+ WvelFile='../input/input_off/wVeltave' ,
+ GMwxFile='../input/input_off/GM_Kwx-T' ,
+ GMwyFile='../input/input_off/GM_Kwy-T' ,
+ GMwzFile='../input/input_off/GM_Kwz-T' ,
+ ConvFile='../input/input_off/Convtave' ,
+ SaltFile='../input/input_off/Stave' ,
+ ThetFile='../input/input_off/Ttave' 
+ &
+
+
+ &OFFLINE_PARM02
+ offlineIter0=4248000,
+ deltaToffline=43200.0,
+ offlineForcingPeriod=2592000.0,
+ offlineForcingCycle=3.1104E7
+ &
+

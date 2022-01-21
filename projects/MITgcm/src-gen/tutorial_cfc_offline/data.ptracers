@@ -1,0 +1,26 @@
+
+# PTRACERS
+
+ &PTRACERS_PARM01
+ PTRACERS_numInUse=2,
+ PTRACERS_Iter0=4248000,
+ PTRACERS_monitorFreq=43200.0,
+ PTRACERS_names='cfc11' ,
+ PTRACERS_long_names='CFC11' ,
+ PTRACERS_units='mol/m^3' ,
+ PTRACERS_advScheme=77,
+ PTRACERS_diffKh=0.0,
+ PTRACERS_diffKr=5.0E-5,
+ PTRACERS_useGMRedi=.TRUE.,
+ PTRACERS_useKPP=.FALSE.,
+ PTRACERS_initialFile=' ' ,
+ PTRACERS_names='cfc12' ,
+ PTRACERS_units='mol/m^3' ,
+ PTRACERS_advScheme=77,
+ PTRACERS_diffKh=0.0,
+ PTRACERS_diffKr=5.0E-5,
+ PTRACERS_useGMRedi=.TRUE.,
+ PTRACERS_useKPP=.FALSE.,
+ PTRACERS_initialFile=' ' 
+ &
+

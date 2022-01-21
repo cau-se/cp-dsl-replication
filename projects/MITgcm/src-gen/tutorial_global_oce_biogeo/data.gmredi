@@ -1,0 +1,12 @@
+
+# GMRedi
+
+ &GM_PARM01
+ GM_background_K=1000.0,
+ GM_taper_scheme='gkw91' ,
+ GM_maxSlope=0.01,
+ GM_Kmin_horiz=100.0,
+ GM_Scrit=0.004,
+ GM_Sd=0.001
+ &
+

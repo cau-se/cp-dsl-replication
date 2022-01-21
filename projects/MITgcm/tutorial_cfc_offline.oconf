@@ -1,0 +1,169 @@
+configuration tutorial_cfc_offline:mitgcm
+parameters
+PARM01{
+ tRef:15*20.0
+ sRef:15*35.0
+ viscA4:0.0
+ viscAh:5.0E5
+ diffKhT:0.0E3
+ diffKhS:0.0E3
+ viscAr:1.0E-3
+ diffKrT:5.0E-5
+ diffKrS:5.0E-5
+ gravity:9.81
+ rhoConst:1035.0
+ rigidLid:false
+ implicitFreeSurface:true
+ eosType:'POLY3'
+ implicitDiffusion:true
+ implicitViscosity:true
+ ivdc_kappa:100.0
+ multiDimAdvection   : false
+//allowFreezing:true
+ useCDscheme:false
+ }
+
+// Elliptic solver parameters
+ PARM02{
+ cg2dMaxIters:1000
+ cg2dTargetResidual:1.0E-13
+ }
+
+// Time stepping parameters
+ PARM03{
+ nIter0  : 4269600
+ nTimeSteps : 4
+// 100 years starting from a spinup of 5900 years:
+//startTime : 1.835136E+11
+//endTime   : 1.866240E+11
+ deltaTmom : 900.0
+//tauCD :     321428.
+ deltaTtracer: 43200.0
+ deltaTClock : 43200.0
+ abEps : 0.1
+//cAdjFreq : -1
+ pChkptFreq:3110400000.0
+//chkptFreq: 3110400000.0
+ dumpFreq:  31104000.0
+ taveFreq:  31104000.0
+ //monitorFreq: 4853865600.0
+ monitorFreq: 2592000.0
+//tauThetaClimRelax : 5184000.0
+//tauSaltClimRelax :  7776000.0
+ periodicExternalForcing:true
+ externForcingPeriod:2592000.0
+ externForcingCycle:31104000.0
+} 
+
+// Gridding parameters
+ PARM04{
+ usingSphericalPolarGrid:true
+ delR:  [50.0,  70.0, 100.0, 140.0, 190.0,
+       240.0, 290.0, 340.0, 390.0, 440.0,
+       490.0, 540.0, 590.0, 640.0, 690.0]
+ ygOrigin:-90.0
+ dxSpacing:2.8125
+ dySpacing:2.8125
+} 
+
+// Input datasets
+ PARM05{
+ bathyFile:      'depth_g77.bin'
+//hydrogThetaFile:'lev_clim_temp.bin',
+//hydrogSaltFile: 'lev_clim_salt.bin',
+//zonalWindFile:  'tren_taux.bin',
+//meridWindFile:  'tren_tauy.bin',
+//thetaClimFile:  'lev_monthly_temp.bin',
+//saltClimFile:   'lev_monthly_salt.bin',
+//surfQnetFile:   'shi_qnet.bin',
+//EmPmRFile:      'shi_empmr_year.bin',
+ the_run_name:   'Testing CFC and OFFLINE code'
+ }
+ EEPARMS{
+ 	nTx:1
+ 	nTy:1
+ }
+ size{
+ sNx :  64
+ sNy :  32
+ OLx :   4
+ OLy :   4
+ nSx :   2
+ nSy :   2
+ nPx :   1
+ nPy :   1
+ Nx  : sNx * nSx * nPx
+ Ny  : sNy * nSy * nPy
+ Nr  :  15
+ }
+ module GMRedi{
+ 	parameters
+  GM_PARM01{
+  GM_background_K    : 1.0e3
+  GM_taper_scheme    : 'gkw91'
+  GM_maxSlope        : 1.0e-2
+  GM_Kmin_horiz      : 100.0
+  GM_Scrit           : 4.0e-3
+  GM_Sd              : 1.0e-3
+ }
+ }
+ module PTRACERS{
+ 	parameters
+ 	PTRACERS_PARM01{
+ PTRACERS_numInUse:2
+ PTRACERS_Iter0: 4248000
+// for verification:
+ PTRACERS_monitorFreq:43200.0
+//- for each tracers:
+// tracer 1 - dic
+ PTRACERS_names(1):'cfc11'
+ PTRACERS_long_names(1):'CFC11'
+ PTRACERS_units(1):'mol/m^3'
+ PTRACERS_advScheme(1):77
+ PTRACERS_diffKh(1):0.0E3
+ PTRACERS_diffKr(1):5.0E-5
+ PTRACERS_useGMRedi(1):true 
+ PTRACERS_useKPP(1):false
+ PTRACERS_initialFile(1):' '
+// tracer 2 - alk
+ PTRACERS_names(2):'cfc12'
+ PTRACERS_units(2):'mol/m^3'
+ PTRACERS_advScheme(2):77
+ PTRACERS_diffKh(2):0.0E3
+ PTRACERS_diffKr(2):5.0E-5
+ PTRACERS_useGMRedi(2):true 
+ PTRACERS_useKPP(2):false
+ PTRACERS_initialFile(2):' '
+ 	}
+ }
+ module Offline{
+ 	parameters
+ 	OFFLINE_PARM01{
+  UvelFile: '../input/input_off/uVeltave'
+  VvelFile: '../input/input_off/vVeltave'
+  WvelFile: '../input/input_off/wVeltave'
+  GMwxFile: '../input/input_off/GM_Kwx-T'
+  GMwyFile: '../input/input_off/GM_Kwy-T'
+  GMwzFile: '../input/input_off/GM_Kwz-T'
+  ConvFile: '../input/input_off/Convtave'
+  SaltFile: '../input/input_off/Stave'
+  ThetFile: '../input/input_off/Ttave'
+// SFluxFile:'../input/input_off/sFluxtave'
+// HFluxFile:' '
+}
+	OFFLINE_PARM02{
+  offlineIter0:4248000
+  deltaToffline:43200.0
+  offlineForcingPeriod:2592000.0
+  offlineForcingCycle:31104000.0
+  	}
+ }
+ module GCHEM{
+ 	parameters
+ 	GCHEM_PARM01{
+  useCFC:true
+  nsubtime:1
+ 
+ }
+ }
+ 

@@ -24,7 +24,9 @@ file '''#{name}/data.rbcs''' when exists(modules['RBCS']) : '''#{use dataTemplat
 file '''#{name}/data.layers''' when exists(modules['Layers']) : '''#{use dataTemplate(modules['Layers'])}'''
 file '''#{name}/data.ptracers''' when exists(modules['PTRACERS']) : '''#{use dataTemplate(modules['PTRACERS'])}'''
 file '''#{name}/data.shap''' when exists(modules['Shap']) : '''#{use dataTemplate(modules['Shap'])}'''
-
+file '''#{name}/data.obcs''' when exists(modules['obcs']) : '''#{use dataTemplate(modules['obcs'])}'''
+file '''#{name}/data.gchem''' when exists(modules['GCHEM']) : '''#{use dataTemplate(modules['GCHEM'])}'''
+file '''#{name}/data.off''' when exists(modules['Offline']) : '''#{use dataTemplate(modules['Offline'])}'''
 template dataTemplate(Module module) '''
 # #{module.name}
 #{for module.groups join "\n" use groupTemplate(it)}

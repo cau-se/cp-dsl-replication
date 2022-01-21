@@ -1,0 +1,16 @@
+
+# obcs
+
+ &OBCS_PARM01
+ OB_Ieast=-1.0,
+ useOrlanskiEast=.TRUE.,
+ useOBCSbalance=.TRUE.,
+ OBCS_monitorFreq=400.0
+ &
+
+
+ &OBCS_PARM02
+ Cmax=0.45,
+ cVelTimeScale=1000.0
+ &
+

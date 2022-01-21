@@ -1,0 +1,68 @@
+
+# Model parameters
+# Continuous equation parameters
+
+ &PARM01
+ tRef=60.0,
+ sRef=2100.0,
+ viscA4=0.0,
+ viscAh=0.01,
+ viscAz=0.001,
+ bottomDragLinear=0.0,
+ no_slip_sides=.TRUE.,
+ no_slip_bottom=.TRUE.,
+ diffK4T=0.0,
+ diffKhT=0.0,
+ diffKzT=0.0,
+ diffKhS=0.01,
+ diffKzS=1.0E-5,
+ tempAdvScheme=33,
+ f0=0.0,
+ beta=0.0,
+ eosType='LINEAR' ,
+ tAlpha=2.0E-4,
+ sBeta=0.0,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ hFacMin=0.05,
+ nonHydrostatic=.TRUE.,
+ readBinaryPrec=64,
+ plotLevel=0
+ &
+
+
+ &PARM02
+ cg2dMaxIters=300,
+ cg2dTargetResidual=1.0E-13,
+ cg3dMaxIters=20,
+ cg3dTargetResidual=1.0E-8
+ &
+
+
+ &PARM03
+ nIter0=0,
+ nTimeSteps=20,
+ deltaT=20.0,
+ abEps=0.01,
+ pChkptFreq=0.0,
+ chkptFreq=0.0,
+ dumpFreq=6000.0,
+ monitorSelect=2,
+ monitorFreq=1.0
+ &
+
+
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ delXfile='dx.bin' ,
+ dYspacing=200.0,
+ delZ=200.0
+ &
+
+
+ &PARM05
+ bathyFiLe='topog.slope' ,
+ hydrogThetaFile='T.init' ,
+ surfQnetFile='Qnet.forcing' 
+ &
+

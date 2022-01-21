@@ -1,0 +1,8 @@
+
+# GCHEM
+
+ &GCHEM_PARM01
+ useCFC=.TRUE.,
+ nsubtime=1
+ &
+
