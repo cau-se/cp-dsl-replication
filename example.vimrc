@@ -14,13 +14,11 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 
 " install language-server
-" Please make sure that the 2 jar files are found by using absolute paths, e.g.,
-" /home/trillian/bin/javassist-3.12.1.GA.jar
+" Please make sure that the jar file is found by using absolute paths.
 au User lsp_setup call lsp#register_server({
         \ 'name': 'oconf',
         \ 'cmd': ['java',
-        \     '-cp', 'javassist-3.12.1.GA.jar',
-        \     '-jar','org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar'],
+        \     '-jar','org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar'],
         \ 'allowlist': ['oconf'],
         \ })
 

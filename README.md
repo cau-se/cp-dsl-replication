@@ -17,7 +17,9 @@ is necessary.
 - Jupyter Kernel `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
 - Jupyter LSP `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
 
-The remainder contains
+- Current technical limitations are listed in: `Limitations.md`
+
+## The remainder contains
 - Setup of the Editors
   - Eclipse Setup
   - Vim Setup
@@ -93,16 +95,24 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
 ## Vim Setup
 
 For the Vim setup, we use its extension mechanism and a special LSP
-plugins (https://github.com/prabirshrestha/vim-lsp).
-Its installation is as follows:
+plugins and Java. Please note, we provide Debian/Ubuntu compatible installation
+commands in our documentation. The correct command for your distribution or
+operating system may differ.
+
+### Prequisites
+
+- Install the Vim LSP plugin from `https://github.com/prabirshrestha/vim-lsp`
+- Install Java preferably Java 11.
+
+### Installation
+
 - Install vim, e.g., with `sudo apt install vim`
-- Copy `javassist-3.26.0.GA.jar` and 
-  `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar` to a tooling
+- Copy `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar` to a tooling
   directory, e.g., `~/bin` in your home directory.
 - Copy the `example.vimrc` to your home folder and rename it to
   `.vimrc`. In case you already have one, you need to merge both
   files accordingly.
-- Open the `.vimrc` in an editor and fix the path to the two jar files.
+- Open the `.vimrc` in an editor and fix the path to the jar file.
 - Create a directory `~/.vim`
 - Start `vim`
 - Type `:PlugInstall`, this should install all necessary plugin parts.
@@ -127,9 +137,11 @@ Its installation is as follows:
 
 ## Jupyter Setup
 
-The Jupyter setup requires not only
+The Jupyter setup requires a working kernel. Unfortunately, currently the
+kernel is not operational. Thus, the setup does not function. We will fix this
+issue and provide an update of the replication package.
 
-**Prerequisites**
+### Prerequisites
 - Kernel sources `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
 - Docker setup (optional) for Jupyter `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
 - LSP for Jupyter `https://github.com/krassowski/jupyterlab-lsp`
@@ -154,7 +166,7 @@ code in `./jupyter_server_config.json`
 ```
 "oconf": {
         "version": 2,
-        "argv": ["java", "-cp", "javassist-3.26.0-GA.jar", "-jar", "org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar"],
+        "argv": ["java", "-cp", "javassist-3.26.0-GA.jar", "-jar", "org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar"],
         "languages": ["oconf"],
         "mime_types": ["text/oconf", "text/x-oconf"]
       }
@@ -204,7 +216,7 @@ Please adapt `path/to/` to the location of the jupyter kernel directory.
 We use two Earth System Climate Models as case studies for the CP-DSL.
 In the following we instruct how to use them.
 
-## MITgcm Project Setup
+## MITgcm Installation
 
 MITgcm is a Earth System Climate Model (ESCM) available from 
 `http://mitgcm.org/`. The documentation can be found at 
@@ -213,30 +225,17 @@ MITgcm is a Earth System Climate Model (ESCM) available from
 To setup the model, you have to can get the code with:
 `git clone https://github.com/MITgcm/MITgcm.git` 
 
-Now you can select an example model. We recommend to use a mode from
-the tutorial, e.g.,
-`https://mitgcm.readthedocs.io/en/latest/examples/barotropic_gyre/barotropic_gyre.html`
+## MITgcm Configuration
 
-Therefore, switch to `verification/tutorial_barotropic_gyre/` inside the
-`MITgcm` code base.
-Before continuing with OceanDSL's CP-DSL, you can have a look at the
-setup files in `input` and `code` sub-directories of the example.
+MITgcm has a set of prepared configurations in its verification directory.
+You can create configuration files for most tutorial project based on the
+example configurations, we provide in the projects/MITgcm directory.
 
-For the CP-DSL, you must create a `configuration.oconf` file in the
-examples model directory. Lets assume this should be done in Eclipse.
+See below in **Using Eclipse** how to import the project and generate code.
 
-- Open Eclipse with a clean workspace.
-- Create a new project that should reside in
-  `verification/tutorial_barotropic_gyre/`
-- You can now copy the `barotropic_gyre.oconf` file to the project.
-- Open the file in Eclipse. Eclipse might ask you to add the XText
-  nature, please do so. In case the `barotropic_gyre.oconf` is opened
-  in a plain text editor, choose *Open with ...* to select the right
-  editor.
-- You can now manipulate settings for the example.
-- Save the file. This generates the necessary configuration files.
-- You can now compile the project following the instructions in the
-  tutorial's README file.
+The generated code has then to be moved to the prepared configuration
+directories. Alternativly, you set the Eclipse output directory to your
+MITgcm verification directory.
 
 ## UVic Project Setup
 
