@@ -10,14 +10,18 @@ an Language Server (LS) implementing the Language Server Protocol (LSP)
 and a Jupyter kernel. To run any example, only one of the three editor setup
 is necessary.
 
+*Note:* We are conducting extensive tests with our case studies that
+will show technical issues with the DSL. Therefore, we will provide updates
+to the replication package which will be uploaded to Zenodo, accordingly.
+
+Current technical limitations are listed in: `Limitations.md`
+
 ## Sources
 
 - CP-DSL  `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl`
 - Replication package `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-replication`
 - Jupyter Kernel `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-kernel`
 - Jupyter LSP `https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-jupyter-setup`
-
-- Current technical limitations are listed in: `Limitations.md`
 
 ## The remainder contains
 - Setup of the Editors
