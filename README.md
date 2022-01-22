@@ -46,13 +46,13 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
   - Download Eclipse from the Eclipse website https://www.eclipse.org/downloads/
   - Click on the Download button for *Get Eclipse IDE 2021‑12*, this directs you
     to a download page for the current version of Eclipse. As of today this is
-    the 2021-12 edition. Howver, CP-DSL should also work with previous and
+    the 2021-12 edition. However, CP-DSL should also work with previous and
     later versions of Eclipse.
   - Click on the Download button for the current version. This should start the
     download and show the donate page, which can be ignored.
   - Wait until the download is complete.
   - Depending on your platform you may have zip, dmg or tar.gz archive.
-  - Upack the archive and run the installer within the archive. On Linux this
+  - Unpack the archive and run the installer within the archive. On Linux this
     can be done with:
     - `tar -xvzpf eclipse-inst-jre-linux64.tar.gz`  (unpack archive)
     - `eclipse-installer/eclipse-inst` (run installer)
@@ -103,7 +103,7 @@ plugins and Java. Please note, we provide Debian/Ubuntu compatible installation
 commands in our documentation. The correct command for your distribution or
 operating system may differ.
 
-### Prequisites
+### Perquisites
 
 - Install the Vim LSP plugin from `https://github.com/prabirshrestha/vim-lsp`
 - Install Java preferably Java 11.
@@ -123,20 +123,20 @@ operating system may differ.
 - Exit `vim` with ESC :x (depending on the number of open buffers, you might
   have to do this twice).
 - Merge or copy the `filetype.vim` to the `~/.vim` directory. This provides
-  filetype information to ensure the correct LSP is used.
+  file type information to ensure the correct LSP is used.
 - Start `vim` again with a file name ending with `.oconf`, e.g., `example.oconf`
   This will start the LSP. Otherwise the LSP stays inactive.
 - You can check the status that the LS is available with `:LspStatus`.
   
-  In case the status is offline or exited, some error might have occured.
+  In case the status is offline or exited, some error might have occurred.
   One option is that the wrong java version is used. You can check this on
   command line with `java -version`.
 
   In case the status is online, you are ready to go. Context help is available
-  with CTRL-Space, similarily to Eclipse. 
+  with CTRL-Space, similarly to Eclipse. 
 
 **Notes:**
-- Vim only provides editing capabilites. Compilation must be performed
+- Vim only provides editing capabilities. Compilation must be performed
   by a command-line compiler.
 
 ## Jupyter Setup
@@ -151,7 +151,7 @@ issue and provide an update of the replication package.
 - LSP for Jupyter `https://github.com/krassowski/jupyterlab-lsp`
 - JuypterLab
 
-Jupyter can be run in a docker container or setup natively on a machine.
+Jupyter can be run in a docker container or directly on a machine.
 For this use the docker setup. However, to run the system in your own
 Jupyter installation, you can follow the steps below.
 
@@ -213,7 +213,7 @@ Create the `kernel.json` file an fill it with following content:
 
 ```
 Place the file in your `share/jupyter/kernels/oconf/` directory.
-Please adapt `path/to/` to the location of the jupyter kernel directory.
+Please adapt `path/to/` to the location of the Jupyter kernel directory.
 
 # Setup of Scientific Models
 
@@ -238,7 +238,7 @@ example configurations, we provide in the projects/MITgcm directory.
 See below in **Using Eclipse** how to import the project and generate code.
 
 The generated code has then to be moved to the prepared configuration
-directories. Alternativly, you set the Eclipse output directory to your
+directories. Alternatively, you set the Eclipse output directory to your
 MITgcm verification directory.
 
 ## UVic Project Setup
@@ -283,7 +283,7 @@ steps are identical for the MITgcm setup. Differences will be noted below.
 - Startup Eclipse with the installed CP-DSL (see above)
 - Click on *File* > *Import...*
 - This opens the *Import Wizard*
-- Click on the arrow or plus sign informt of the entry *General*
+- Click on the arrow or plus sign infront of the entry *General*
 - Select *Existing Projects into Workspace*
 - Click *Next>*
 - This opens the *Import Projects* dialog
