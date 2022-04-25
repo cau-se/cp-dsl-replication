@@ -16,7 +16,7 @@ os.system("wget -O " + "~/bin/" + nameOfRelease + " " + gitRepo + "/-/raw/master
 #get the newest oceandsl-mode for emacs
 os.system("wget -O ~/bin/ " + gitRepo + "/-/raw/master/oceandsl-mode.el")
 data = Path(path.expanduser("~/bin/oceandsl-mode.el")).read_text().replace("kali", getpass.getuser())
-	Path(path.expanduser("~/bin/oceandsl-mode.el")).write_text(data)
+Path(path.expanduser("~/bin/oceandsl-mode.el")).write_text(data)
 
 #get latest emacs init file
 os.system("wget -O ~/temp/init.el " + gitRepo + "/-/raw/master/init.el")
