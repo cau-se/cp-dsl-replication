@@ -5,6 +5,7 @@ from pathlib import Path
 
 gitRepo = "https://git.se.informatik.uni-kiel.de/oceandsl/cp-dsl-replication"
 nameOfRelease = "org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar"
+pathToJar = "/home/" + getpass.getuser() + "/bin/" + nameOfRelease
 
 #get the newest oceandsl lsp
 os.system("sudo apt update && sudo apt install emacs")
@@ -14,6 +15,8 @@ os.system("wget -O " + "~/bin/" + nameOfRelease + " " + gitRepo + "/-/raw/master
 
 #get the newest oceandsl-mode for emacs
 os.system("wget -O ~/bin/ " + gitRepo + "/-/raw/master/oceandsl-mode.el")
+data = Path(path.expanduser("~/bin/oceandsl-mode.el")).read_text().replace("kali", getpass.getuser())
+	Path(path.expanduser("~/bin/oceandsl-mode.el")).write_text(data)
 
 #get latest emacs init file
 os.system("wget -O ~/temp/init.el " + gitRepo + "/-/raw/master/init.el")
