@@ -27,6 +27,7 @@ Current technical limitations are listed in: `Limitations.md`
 - Setup of the Editors
   - Eclipse Setup
   - Vim Setup
+  - Emacs Setup
   - Jupyter Setup
 - Utilizing the CP-DSL
   - Using Eclipse
@@ -51,7 +52,7 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
   - Click on the Download button for the current version. This should start the
     download and show the donate page, which can be ignored.
   - Wait until the download is complete.
-  - Depending on your platform you may have zip, dmg or tar.gz archive.
+  - Depending on your platform you may have zip, exe, dmg or tar.gz archive.
   - Unpack the archive and run the installer within the archive. On Linux this
     can be done with:
     - `tar -xvzpf eclipse-inst-jre-linux64.tar.gz`  (unpack archive)
@@ -84,15 +85,16 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
     the entry `Configuration DSL`. Check the checkbox in front and click the
     *Next >* button. `Configuration DSL` comprises of three features for
     `Configuration`, `Declaration` and `Templates`.
-  - On the next page of the installation dialog these three features are shown.
+  - On the next page of the installation dialog these three features are shown. Plus some not any more required preinstalled packages.
   - Click on *Finish* to download them.
   - Now a *Security Warning* pops up indicating that our packages are not signed.
     Unfortunately, this is still true, as the signing process is not trivial,
     but will be fixed in future releases.
-  - To proceed with clicking on *Install Anyway*.
+  - To proceed, check the box next to the source and click on *trust selected*.
   - Eclipse will install the extension and ask to restart.
   - Click on *Restart Now*. This ensures that the features are installed
     correctly.
+  - Eclipse will try to install the uninstalled not any more needed packages again, just ignore these.
   - Now you are setup.
 
 
@@ -109,6 +111,9 @@ operating system may differ.
 - Install Java preferably Java 11.
 
 ### Installation
+We provide an Python-Script for an easy installation. Just download the `VimSetupScript.py` and run it with `python3 VimSetupScript`.
+
+Alternative manual installation:
 
 - Install vim, e.g., with `sudo apt install vim`
 - Copy `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar` to a tooling
@@ -130,14 +135,60 @@ operating system may differ.
   
   In case the status is offline or exited, some error might have occurred.
   One option is that the wrong java version is used. You can check this on
-  command line with `java -version`.
+  command line with `java -version`. For a more detailed analysis of the error you can check the VimLSP-logs in `~/vim-lsp.log`
 
-  In case the status is online, you are ready to go. Context help is available
+  In case the status is running, you are ready to go. Context help is available
   with CTRL-Space, similarly to Eclipse. 
 
 **Notes:**
 - Vim only provides editing capabilities. Compilation must be performed
   by a command-line compiler.
+  
+## Emacs Setup
+
+For the Emacs setup, we use the lsp-mode package and Java. 
+As in the Vim Installation, we provide Debian/Ubuntu compatible installation
+commands in our documentation. The correct command for your distribution or
+operating system may differ.
+
+### Perquisites
+
+- Install the Emacs lsp-mode from `https://emacs-lsp.github.io/lsp-mode/`
+- Install Java preferably Java 11.
+
+### Installation
+
+We provide an Python-Script for an easy installation. Just download the `EmacsSetupScript.py` and run it with `python3 EmacsSetupScript`.
+
+Alternative manual installation:
+- Install `Emacs` with e.g. `sudo apt update && sudo apt install emacs`
+- Run `Emacs` for the first time, so that it can create some standart folder, etc.
+- To run `Emacs` within the console, type `emacs -nw` "nw" for "no-window"
+- Download the latest version of the OceanDSL Language Server and put it in a folder (ex. `~/bin/`)
+- Download the latest oceandsl-mode.el file and place it in i.e. the same folder (`~/bin/`)
+edit the path to the jar file, so that it is correct
+(make sure to use absolute path ex. `/home/user/bin/example.jar`)
+- Merge or use the `init.el` as initial-instruction for `Emacs`
+usally it is located at (`~/.emacs.d/init.el` or `~/.emacs`) if it is not there, than just create one.
+Make sure, that the path in the init.el is the path to the folder where "oceandsl-mode.el" is located (ex. `~/bin/`)
+- Open Emacs
+The rest of the instructions use `M-x` as instruction for:
+Press `ESC` and then `x` (`M-x`)
+
+- install package lsp: `M-x` type `package-install` ENTER `lsp-mode` ENTER
+if `Emacs` shows you ("could not found lsp-mode.[vers-number].tar") type: `M-x` `package-refresh-contents` ENTER
+After Installation close `Emacs`
+
+-Usage:
+open an OceanDSL file
+Just start the lsp-mode with `M-x` `lsp`
+
+The LS should be started and you are good to go.
+
+**Notes:**
+- Should lsp-mode show you a bunch of warnings, type: `M-x` `load-library` ENTER `oceandsl-mode` ENTER (you can use tabulator for autocompletion). 
+If you cannot use auto-completion you configured the path to `oceandsl-mode.el` in `init.el` wrong.
+- As in the Vim installation mentioned: Compilation must be performed by a command-line compiler.
 
 ## Jupyter Setup
 
