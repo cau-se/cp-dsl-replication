@@ -8,13 +8,13 @@ nameOfRelease = "org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar"
 pathToJar = "/home/" + getpass.getuser() + "/bin/" + nameOfRelease
 
 #get the newest oceandsl lsp
-os.system("sudo apt update && sudo apt install emacs")
+os.system("sudo apt update && sudo apt -y install emacs")
 Path(path.expanduser("~/temp")).mkdir(parents=True, exist_ok=True)
 Path(path.expanduser("~/bin")).mkdir(parents=True, exist_ok=True)
 os.system("wget -O " + "~/bin/" + nameOfRelease + " " + gitRepo + "/-/raw/master/" + nameOfRelease)
 
 #get the newest oceandsl-mode for emacs
-os.system("wget -O ~/bin/ " + gitRepo + "/-/raw/master/oceandsl-mode.el")
+os.system("wget -O ~/bin/oceandsl-mode.el " + gitRepo + "/-/raw/master/oceandsl-mode.el")
 data = Path(path.expanduser("~/bin/oceandsl-mode.el")).read_text().replace("kali", getpass.getuser())
 Path(path.expanduser("~/bin/oceandsl-mode.el")).write_text(data)
 

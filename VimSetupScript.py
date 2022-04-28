@@ -8,16 +8,15 @@ nameOfRelease = "org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar"
 pathToJar = "/home/" + getpass.getuser() + "/bin/" + nameOfRelease
 
 
-os.system("sudo apt update && sudo apt install vim")
+os.system("sudo apt update && sudo apt -y install vim")
 Path(path.expanduser("~/temp")).mkdir(parents=True, exist_ok=True)
 #print(path.expanduser("~/bin"))
 Path(path.expanduser("~/bin")).mkdir(parents=True, exist_ok=True)
 os.system("wget -O " + "~/bin/" + nameOfRelease + " " + gitRepo + "/-/raw/master/" + nameOfRelease)
 
-
 os.system("wget -O ~/temp/example.vimrc " + gitRepo + "/-/raw/master/example.vimrc")
 
-#Wenn .vimrc schon existiert müssen wir entweder mergen oder der entsprechende Code ist auch schon vorhanden dann müssen wir nichts tun
+#if .vimrc already exists we either need to merge or it already exists then we don't need to do anything
 if(os.path.exists(path.expanduser("~/.vimrc"))):
 	newData = Path(path.expanduser("~/temp/example.vimrc")).read_text().replace(nameOfRelease, pathToJar)
 	oldData = Path(path.expanduser("~/.vimrc")).read_text()
@@ -30,13 +29,10 @@ else:
 	os.system("sudo chown " + getpass.getuser() + " ~/.vimrc")
 	data = Path(path.expanduser("~/.vimrc")).read_text().replace(nameOfRelease, pathToJar)
 	Path(path.expanduser("~/.vimrc")).write_text(data)
-	
-	
-	
 
 Path(path.expanduser("~/.vim")).mkdir(parents=True, exist_ok=True)
 
-#Die Plugins werden installiert
+#install plugins
 os.system("vim +slient +PlugInstall +qall")
 
 
