@@ -45,9 +45,9 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
     https://www.oracle.com/java/technologies/downloads/#java11
 - *Installing Eclipse*
   - Download Eclipse from the Eclipse website https://www.eclipse.org/downloads/
-  - Click on the Download button for *Get Eclipse IDE 2021‑12*, this directs you
+  - Click on the Download button for *Get Eclipse IDE 2022‑03*, this directs you
     to a download page for the current version of Eclipse. As of today this is
-    the 2021-12 edition. However, CP-DSL should also work with previous and
+    the 2022-03 edition. However, CP-DSL should also work with previous and
     later versions of Eclipse.
   - Click on the Download button for the current version. This should start the
     download and show the donate page, which can be ignored.
@@ -70,16 +70,16 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
   - Open Eclipse. If you pressed on "Launch" in the previous step, this will
     automatically happen.
   - Eclipse starts up and asks for a workspace directory. You may take the
-    default or use a different name. The documentation will use `eclipse-workspace`
-    as the name for the workspace directory.
+    default or use a different name. The documentation will use standart`eclipse-workspace`
+    as the name for the workspace directory, under *home* directory.
   - Now Eclipse shows its start screen and we can start to install the CP-DSL
     extension.
   - Click on *Help* and then *Install new Software* menu entry. This opens up
-    the Install dialog.
+    the *Install* dialog.
   - Here we need to add the update site for CP-DSL. Therefore, click on
     *Add ...* button on the ride side. This allows us to add a new repository.
-  - Enter `cp-dsl` as name and `https://maui.se.informatik.uni-kiel.de/repo/oceandsl/snapshot/`
-    as URL for the repository.
+  - Enter `cp-dsl` as name under *Name* and `https://maui.se.informatik.uni-kiel.de/repo/oceandsl/snapshot/`
+    as URL for the repository under *Location*.
   - Click on *Add* 
   - Below the row with "Work with:" and the *Add* button, a list appears with
     the entry `Configuration DSL`. Check the checkbox in front and click the
@@ -107,7 +107,6 @@ operating system may differ.
 
 ### Perquisites
 
-- Install the Vim LSP plugin from `https://github.com/prabirshrestha/vim-lsp`
 - Install Java preferably Java 11.
 
 ### Installation
@@ -115,6 +114,7 @@ We provide an Python-Script for an easy installation. Just download the `VimSetu
 
 Alternative manual installation:
 
+- Install the Vim LSP plugin from `https://github.com/prabirshrestha/vim-lsp`
 - Install vim, e.g., with `sudo apt install vim`
 - Copy `org.oceandsl.configuration.ide-1.0.0-SNAPSHOT-ls.jar` to a tooling
   directory, e.g., `~/bin` in your home directory.
@@ -323,7 +323,7 @@ your model resides in `uvic-model/uvic-run-1`.
 
 Depending on the editor there are some minor differences in how to use the
 different editors with the CP-DSL tooling. The prepared specifications and
-declaration for UVic and MITgcm can be found in this repository/archive in the
+declarations for UVic and MITgcm can be found in this repository/archive in the
 `projects` directory.
 
 ## Using Eclipse 
@@ -340,15 +340,16 @@ steps are identical for the MITgcm setup. Differences will be noted below.
 - This opens the *Import Projects* dialog
 - Click on the *Browse...* button to select the directory of the UVic project.
 - This opens a file dialog.
-- Navigate to the `cp-dsl-replication/projects/` directory.
-- Select `UVic` and click *Open*.
-- Now there should be one project listed under projects.
+- Navigate to the UVic project example in the `cp-dsl-replication/projects/`
+  directory of the replication package.
+- Select `UVic` directory and click *Open*.
+- Now the UVic Project should be listed under *Projects*.
 - Click *Finish*
 - If the welcome pane is still shown, close it by clicking on the X new the
   label *Welcome*.
 - Now you should see the IDE with a *Model Explorer* and an *Outline* on the
   left, a large empty area (for the editor) and a *Properties* and *Problem*
-  view at the bottom.
+  view at the bottom, depending on your Eclipse layout.
 - Click in the *Model Explorer* on the arrow/plus sign in front of the word
   UVic. This unfolds the project and you can see 4 files labeled:
   - configuration.oconf
