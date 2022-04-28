@@ -1,49 +1,47 @@
 configuration fiststeps : uvic
 
-features
+activate
 	even_fluxes, cyclic, time_averages, time_step_monitor, sbc_in_memory, fourfil, constant_flux_reference,
 	global_sums, align_coupling_output
+
+group general {
+	version_directory: "/home/reiner/Projects/OceanDSL/case-studies/uvic-model/2.9"
+	executable_file: "UVic_ESCM"
+	output_file: "pr"
+	code_directory: "code"
+	data_directory: "data"
+	updates_level: "latest"
+	no_warnings: true
+	preprocessor: "fpp"
+	libraries: [ "netcdf", "netcdff" ]
+	library_paths: [ "/usr/lib/x86_64-linux-gnu", "/home/reiner/Projects/Kieker/kieker-lang-pack-c/libkieker/.libs" ]
+}
+group source {
+	code_extensions: [ f90, f, f, f, f, f, f, f ]
+	directories: [ "updates/f90", "source/common", "source/netcdf", "source/embm", "source/ice", "source/mtlm", "source/mom", "source/sed" ]
+}
+group data {
+	directories: [ "data.100.100.19" ]
+}
 	
-	
-parameters
-	general {
-		version_directory: "/home/reiner/Projects/OceanDSL/case-studies/uvic-model/2.9"
-		executable_file: "UVic_ESCM"
-		output_file: "pr"
-		code_directory: "code"
-		data_directory: "data"
-		updates_level: "latest"
-		no_warnings: true
-		preprocessor: "fpp"
-		libraries: [ "netcdf", "netcdff" ]
-		library_paths: [ "/usr/lib/x86_64-linux-gnu", "/home/reiner/Projects/Kieker/kieker-lang-pack-c/libkieker/.libs" ]
-	}
-	source {
-		code_extensions: [ f90, f, f, f, f, f, f, f ]
-		directories: [ "updates/f90", "source/common", "source/netcdf", "source/embm", "source/ice", "source/mtlm", "source/mom", "source/sed" ]
-	}
-	data {
-		directories: [ "data.100.100.19" ]
-	}
-	
-module generic {
+feature generic {
 	
 }
 	
-module Atmosphere {
-	features embm, embm_mgrid
+feature embm {
+	activate embm_mgrid
 }
 
-module SeaIce {
-	features ice, ice_evp, ice_fourfil
+feature ice {
+	activate ice_evp, ice_fourfil
 }
 
-module LandAndVegetation {
-	features mtlm, mtlm_segday
+feature mtlm {
+	activate mtlm_segday
 }
 
-module Ocean {
-	features mom, 
+feature mom {
+	activate 
 		conjugate_gradient,
 		sf_5_point, 
 		stream_function,
@@ -61,46 +59,35 @@ module Ocean {
 		isopycmix,
 		fct,
 		fct_3d,
-		npzd,
-		npzd_alk,
-		npzd_nitrogen,
-		npzd_iron,
-		npzd_no_vflux,
-		npzd_o2,
-		npzd_cdom_attenuation,
-		npzd_subgridbathy,
-		save_npzd,
 		tidal_kv,
 		highmix_Southern_Ocean,
 		anisotropic_viscosity,
 		increase_isopyc_diff,
-		increase_isopyc_diff_smooth,
-		opem,
-		opem_pos
+		increase_isopyc_diff_smooth
 }
 
-module Carbon {
-	features carbon,
+feature carbon {
+	activate
 		save_carbon_carbonate_chem,
 		save_carbon_totals
 }
 
-module Forcing {
-	features co2ccn_data,
+feature Forcing {
+	activate co2ccn_data,
 		agric_data,
 		landice_data,
 		solar_data
 }
 
-module Timestep {
-	features tai_otsf,
+feature Timestep {
+	activate tai_otsf,
 	tai_ns,
 	tai_lo,
 	tai_slh,
 	tai_rad
 }
 
-module Units {
-	features units_temperature_Celsius, units_time_years, save_time_relyear0
+feature Units {
+	activate units_temperature_Celsius, units_time_years, save_time_relyear0
 }
 

@@ -10,9 +10,6 @@ Version_Directory = #{general.version_directory}
 Model_Options =
 #{for features join "\n" use featureTemplate(it)}
 
-### Module based options
-#{for modules join "\n" use modulesTemplate(it)}
-
 #{for source.code_extensions join "\n" use codeExtensionsTemplate(it, i#)}
 ### source code directories (if excluded, exclude equivalent option)
 #{for source.directories join "\n" use printSourceDirectory(it, i#)}
@@ -46,9 +43,6 @@ template codeExtensionsTemplate(FileType type, int count)
 
 template printSourceDirectory(string filename, int number) '''Source_Directory(#{number}) = #{filename}'''
 
-template modulesTemplate(Module module) '''
-
-### Module #{module.name}
-#{for module.features join "\n" use featureTemplate(it)}'''
-
-template featureTemplate(Feature feature) '''#{if feature.deactivated "#"}O_#{feature.name}'''
+template featureTemplate(Feature feature) '''#{if feature.deactivated "#"}O_#{feature.name}
+#{for feature.features join "\n" use featureTemplate(it)}
+'''
