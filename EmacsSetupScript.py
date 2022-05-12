@@ -15,7 +15,7 @@ os.system("wget -O " + "~/bin/" + nameOfRelease + " " + gitRepo + "/-/raw/master
 
 #get the newest oceandsl-mode for emacs
 os.system("wget -O ~/bin/oceandsl-mode.el " + gitRepo + "/-/raw/master/oceandsl-mode.el")
-data = Path(path.expanduser("~/bin/oceandsl-mode.el")).read_text().replace("kali", getpass.getuser())
+data = Path(path.expanduser("~/bin/oceandsl-mode.el")).read_text().replace("/home/kali/bin/org.oceandsl.configuration.ide-1.3.0-SNAPSHOT-ls.jar", pathToJar)
 Path(path.expanduser("~/bin/oceandsl-mode.el")).write_text(data)
 
 #get latest emacs init file
