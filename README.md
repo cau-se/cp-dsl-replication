@@ -82,8 +82,8 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
     as URL for the repository under *Location*.
   - Click on *Add* 
   - Below the row with "Work with:" and the *Add* button, a list appears with
-    the entry `Configuration DSL`. Check the checkbox in front and click the
-    *Next >* button. `Configuration DSL` comprises of three features for
+    the entry `CP-DSL`. Check the checkbox in front and click the
+    *Next >* button. `CP-DSL` comprises of three features for
     `Configuration`, `Declaration` and `Templates`.
   - On the next page of the installation dialog these three features are shown. Plus some not any more required preinstalled packages.
   - Click on *Finish* to download them.
