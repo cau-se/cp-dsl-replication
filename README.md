@@ -96,7 +96,8 @@ Before you can install the CP-DSL in Eclipse you need to install Eclipse.
     correctly.
   - Eclipse will try to install the uninstalled not any more needed packages again, just ignore these.
   - Now you are setup.
-
+  - Create a new project in Eclipse or open an existing one and open or create a file name ending with `.oconf`, e.g., `example.oconf`
+  This will start the LSP. Otherwise the LSP stays inactive.
 
 ## Vim Setup
 
